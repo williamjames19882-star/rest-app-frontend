@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = '/api';
+// Use production backend URL or local proxy for development
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://rest-app-backend.onrender.com/api'
+  : '/api';
 
 const api = axios.create({
   baseURL: API_URL,
