@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { decodeToken } from '../utils/jwt';
 
 const AuthContext = createContext();
 
@@ -14,6 +15,14 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [role, setRole] = useState(localStorage.getItem('role'));
+  const [userName, setUserName] = useState(() => {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      const decoded = decodeToken(storedToken);
+      return decoded?.name || null;
+    }
+    return null;
+  });
 
   useEffect(() => {
     if (token) {
@@ -39,6 +48,15 @@ export const AuthProvider = ({ children }) => {
     }
   }, [role]);
 
+  useEffect(() => {
+    if (token) {
+      const decoded = decodeToken(token);
+      setUserName(decoded?.name || null);
+    } else {
+      setUserName(null);
+    }
+  }, [token]);
+
   const login = (newToken, newUserId, newRole) => {
     setToken(newToken);
     setUserId(newUserId);
@@ -49,6 +67,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUserId(null);
     setRole(null);
+    setUserName(null);
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('role');
@@ -60,6 +79,7 @@ export const AuthProvider = ({ children }) => {
     token,
     userId,
     role,
+    userName,
     isAdmin,
     login,
     logout

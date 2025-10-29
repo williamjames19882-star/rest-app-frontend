@@ -43,29 +43,38 @@ const Home = () => {
         </div>
 
         <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 px-4">
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-lg hover:shadow-2xl group">
+          <Link
+            to={ROUTE_PATHS.MENU}
+            className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-lg hover:shadow-2xl group cursor-pointer"
+          >
             <div className="text-4xl sm:text-5xl mb-3 sm:mb-4 transform group-hover:scale-110 transition-transform duration-300">🍕</div>
             <h3 className="text-lg sm:text-xl font-semibold mb-2">Delicious Food</h3>
             <p className="text-sm sm:text-base text-gray-100">
               Wide variety of mouth-watering dishes from Italian to Asian cuisine
             </p>
-          </div>
+          </Link>
           
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-lg hover:shadow-2xl group">
+          <Link
+            to={ROUTE_PATHS.BOOK_TABLE}
+            className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-lg hover:shadow-2xl group cursor-pointer"
+          >
             <div className="text-4xl sm:text-5xl mb-3 sm:mb-4 transform group-hover:scale-110 transition-transform duration-300">🎯</div>
             <h3 className="text-lg sm:text-xl font-semibold mb-2">Easy Booking</h3>
             <p className="text-sm sm:text-base text-gray-100">
               Book your table online in just a few clicks
             </p>
-          </div>
+          </Link>
           
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 sm:col-span-2 lg:col-span-1 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-lg hover:shadow-2xl group">
+          <Link
+            to={ROUTE_PATHS.CONTACT}
+            className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 sm:col-span-2 lg:col-span-1 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-lg hover:shadow-2xl group cursor-pointer"
+          >
             <div className="text-4xl sm:text-5xl mb-3 sm:mb-4 transform group-hover:scale-110 transition-transform duration-300">⭐</div>
             <h3 className="text-lg sm:text-xl font-semibold mb-2">Great Service</h3>
             <p className="text-sm sm:text-base text-gray-100">
               Dedicated staff committed to making your dining experience perfect
             </p>
-          </div>
+          </Link>
         </div>
       </div>
     </div>

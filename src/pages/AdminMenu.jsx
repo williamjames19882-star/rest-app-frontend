@@ -19,6 +19,8 @@ const AdminMenu = () => {
     image: null,
     image_url: ''
   });
+  const [isNewCategory, setIsNewCategory] = useState(false);
+  const [newCategory, setNewCategory] = useState('');
 
   useEffect(() => {
     fetchMenu();
@@ -52,14 +54,6 @@ const AdminMenu = () => {
     fetchMenu();
   }, [selectedCategory]);
 
-  // Auto-dismiss toast messages
-  useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => setSuccess(''), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [success]);
-
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => setError(''), 4000);
@@ -71,6 +65,18 @@ const AdminMenu = () => {
     const { name, value, files } = e.target;
     if (name === 'image') {
       setFormData({ ...formData, image: files[0] });
+    } else if (name === 'category') {
+      if (value === '__NEW__') {
+        setIsNewCategory(true);
+        setFormData({ ...formData, category: '' });
+      } else {
+        setIsNewCategory(false);
+        setFormData({ ...formData, category: value });
+        setNewCategory('');
+      }
+    } else if (name === 'newCategory') {
+      setNewCategory(value);
+      setFormData({ ...formData, category: value });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -106,12 +112,20 @@ const AdminMenu = () => {
         setSuccess('Menu item created successfully!');
       }
 
+      // If new category was created, refresh categories list
+      if (isNewCategory && newCategory) {
+        await fetchCategories();
+      }
+
       setTimeout(() => {
         setIsFormOpen(false);
         setEditingItem(null);
         setFormData({ name: '', description: '', price: '', category: '', image: null, image_url: '' });
+        setIsNewCategory(false);
+        setNewCategory('');
+        setSuccess('');
         fetchMenu();
-      }, 1000);
+      }, 1500);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to save menu item.');
     } finally {
@@ -129,6 +143,8 @@ const AdminMenu = () => {
       image: null,
       image_url: item.image_url || ''
     });
+    setIsNewCategory(false);
+    setNewCategory('');
     setIsFormOpen(true);
   };
 
@@ -141,8 +157,10 @@ const AdminMenu = () => {
       await adminAPI.deleteMenuItem(id);
       setSuccess('Menu item deleted successfully!');
       fetchMenu();
+      setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to delete menu item.');
+      setTimeout(() => setError(''), 4000);
     }
   };
 
@@ -150,6 +168,8 @@ const AdminMenu = () => {
     setIsFormOpen(false);
     setEditingItem(null);
     setFormData({ name: '', description: '', price: '', category: '', image: null, image_url: '' });
+    setIsNewCategory(false);
+    setNewCategory('');
     setError('');
     setSuccess('');
     setSaving(false);
@@ -225,25 +245,6 @@ const AdminMenu = () => {
                   {editingItem ? 'Edit Menu Item' : 'Add Menu Item'}
                 </h3>
 
-                {/* Toast Notifications */}
-                {error && (
-                  <div className="mb-4 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg animate-slide-down flex items-center gap-3">
-                    <svg className="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p className="text-red-700 font-medium">{error}</p>
-                  </div>
-                )}
-
-                {success && (
-                  <div className="mb-4 bg-green-50 border-l-4 border-green-500 p-4 rounded-lg animate-slide-down flex items-center gap-3">
-                    <svg className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p className="text-green-700 font-medium">{success}</p>
-                  </div>
-                )}
-
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
@@ -282,18 +283,47 @@ const AdminMenu = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
-                      <select
-                        name="category"
-                        required
-                        value={formData.category}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option value="">Select category</option>
-                        {categories.map(cat => (
-                          <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                      </select>
+                      {!isNewCategory ? (
+                        <select
+                          name="category"
+                          required
+                          value={formData.category}
+                          onChange={handleChange}
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                          <option value="">Select category</option>
+                          {categories.map(cat => (
+                            <option key={cat} value={cat}>{cat}</option>
+                          ))}
+                          <option value="__NEW__" className="font-semibold text-indigo-600">+ Add New Category</option>
+                        </select>
+                      ) : (
+                        <div className="space-y-2">
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              name="newCategory"
+                              required
+                              value={newCategory}
+                              onChange={handleChange}
+                              placeholder="Enter new category name"
+                              className="flex-1 px-4 py-2 border-2 border-indigo-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setIsNewCategory(false);
+                                setNewCategory('');
+                                setFormData({ ...formData, category: '' });
+                              }}
+                              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                          <p className="text-xs text-gray-500">Creating a new category: {newCategory}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div>
@@ -329,6 +359,26 @@ const AdminMenu = () => {
                     />
                     <p className="text-sm text-gray-500 mt-1">Leave empty to keep current image</p>
                   </div>
+                  
+                  {/* Error and Success Messages near button */}
+                  {error && (
+                    <div className="bg-red-50 border-2 border-red-300 text-red-700 px-4 py-3 rounded-xl animate-slide-down shadow-md flex items-center gap-2">
+                      <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  {success && (
+                    <div className="bg-green-50 border-2 border-green-300 text-green-700 px-4 py-3 rounded-xl animate-slide-down shadow-md flex items-center gap-2">
+                      <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>{success}</span>
+                    </div>
+                  )}
+                  
                   <div className="flex gap-4">
                     <button
                       type="submit"

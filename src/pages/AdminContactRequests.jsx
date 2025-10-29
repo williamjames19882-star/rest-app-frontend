@@ -6,6 +6,8 @@ const AdminContactRequests = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchRequests();
@@ -31,9 +33,36 @@ const AdminContactRequests = () => {
       setRequests(requests.map(req => 
         req.id === id ? { ...req, status: newStatus } : req
       ));
+      // Update selected request if modal is open
+      if (selectedRequest && selectedRequest.id === id) {
+        setSelectedRequest({ ...selectedRequest, status: newStatus });
+      }
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to update status.');
     }
+  };
+
+  const handleRequestClick = async (request) => {
+    setSelectedRequest(request);
+    setIsModalOpen(true);
+    
+    // Automatically change status to "read" if it's "new"
+    if (request.status === 'new') {
+      try {
+        await adminAPI.updateContactRequestStatus(request.id, 'read');
+        setRequests(requests.map(req => 
+          req.id === request.id ? { ...req, status: 'read' } : req
+        ));
+        setSelectedRequest({ ...request, status: 'read' });
+      } catch (err) {
+        console.error('Failed to update status:', err);
+      }
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedRequest(null);
   };
 
   const formatDate = (dateString) => {
@@ -139,12 +168,13 @@ const AdminContactRequests = () => {
             {filteredRequests.map((request, index) => (
               <div
                 key={request.id}
-                className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 border border-gray-100 animate-fade-in group"
+                onClick={() => handleRequestClick(request)}
+                className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 border border-gray-100 animate-fade-in group cursor-pointer"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="flex items-center justify-between gap-4">
                   <div className="flex-1">
-                    <div className="flex items-center mb-3 flex-wrap gap-2">
+                    <div className="flex items-center mb-2 flex-wrap gap-2">
                       <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                         {request.name}
                       </h3>
@@ -152,35 +182,125 @@ const AdminContactRequests = () => {
                         {request.status}
                       </span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-600">
-                      <p><span className="font-medium">Phone:</span> {request.phone}</p>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-gray-600">
                       {request.email && (
-                        <p><span className="font-medium">Email:</span> {request.email}</p>
+                        <p className="text-sm"><span className="font-medium">Email:</span> {request.email}</p>
                       )}
-                      {request.message && (
-                        <p className="col-span-full text-sm italic border-l-2 border-indigo-500 pl-3 mt-2">
-                          <span className="font-medium">Message:</span> {request.message}
-                        </p>
-                      )}
-                      <p className="col-span-full text-xs text-gray-500">
+                      <p className="text-xs text-gray-500">
                         Submitted: {formatDate(request.created_at)}
                       </p>
                     </div>
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <select
-                      value={request.status}
-                      onChange={(e) => handleStatusChange(request.id, e.target.value)}
-                      className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 bg-white"
-                    >
-                      <option value="new">New</option>
-                      <option value="read">Read</option>
-                      <option value="responded">Responded</option>
-                    </select>
+                  <div className="flex items-center">
+                    <svg className="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Contact Request Detail Modal */}
+        {isModalOpen && selectedRequest && (
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
+            onClick={handleCloseModal}
+          >
+            <div 
+              className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-slide-up"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    Contact Request Details
+                  </h3>
+                  <button
+                    onClick={handleCloseModal}
+                    className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
+                  >
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Status Badge and Responded Button */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-medium text-gray-600">Status:</span>
+                      <span className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(selectedRequest.status)}`}>
+                        {selectedRequest.status}
+                      </span>
+                    </div>
+                    {(selectedRequest.status === 'new' || selectedRequest.status === 'read') && (
+                      <button
+                        onClick={() => handleStatusChange(selectedRequest.id, 'responded')}
+                        className="px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                      >
+                        Mark as Responded
+                      </button>
+                    )}
+                  </div>
+
+                  {/* User Details */}
+                  <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
+                      <p className="text-lg font-medium text-gray-900">{selectedRequest.name}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                        <p className="text-gray-900">
+                          <a href={`tel:${selectedRequest.phone}`} className="hover:text-indigo-600 transition-colors">
+                            {selectedRequest.phone}
+                          </a>
+                        </p>
+                      </div>
+
+                      {selectedRequest.email && (
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                          <p className="text-gray-900">
+                            <a href={`mailto:${selectedRequest.email}`} className="hover:text-indigo-600 transition-colors break-all">
+                              {selectedRequest.email}
+                            </a>
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {selectedRequest.message && (
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Message</label>
+                        <div className="bg-white rounded-lg p-4 border-2 border-indigo-200">
+                          <p className="text-gray-700 whitespace-pre-wrap">{selectedRequest.message}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Submitted At</label>
+                      <p className="text-gray-600">{formatDate(selectedRequest.created_at)}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={handleCloseModal}
+                    className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

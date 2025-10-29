@@ -134,10 +134,10 @@ export const navigationItems = {
   admin: [
     { label: 'Dashboard', path: ROUTE_PATHS.ADMIN },
     { label: 'Reservations', path: ROUTE_PATHS.ADMIN_RESERVATIONS },
-    { label: 'Menu', path: ROUTE_PATHS.ADMIN_MENU },
-    { label: 'Tables', path: ROUTE_PATHS.ADMIN_TABLES },
+    // { label: 'Menu', path: ROUTE_PATHS.ADMIN_MENU },
+    // { label: 'Tables', path: ROUTE_PATHS.ADMIN_TABLES },
     { label: 'Contact Requests', path: ROUTE_PATHS.ADMIN_CONTACT_REQUESTS },
-    { label: 'Users', path: ROUTE_PATHS.ADMIN_USERS },
+    // { label: 'Users', path: ROUTE_PATHS.ADMIN_USERS },
   ],
 };
 

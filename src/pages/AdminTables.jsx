@@ -20,13 +20,6 @@ const AdminTables = () => {
   }, []);
 
   useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => setSuccess(''), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [success]);
-
-  useEffect(() => {
     if (error) {
       const timer = setTimeout(() => setError(''), 4000);
       return () => clearTimeout(timer);
@@ -71,8 +64,9 @@ const AdminTables = () => {
         setIsFormOpen(false);
         setEditingTable(null);
         setFormData({ table_number: '', capacity: '', location: '' });
+        setSuccess('');
         fetchTables();
-      }, 1000);
+      }, 1500);
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'Failed to save table.';
       // Check if it's a duplicate table number error
@@ -105,8 +99,10 @@ const AdminTables = () => {
       await adminAPI.deleteTable(id);
       setSuccess('Table deleted successfully!');
       fetchTables();
+      setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to delete table.');
+      setTimeout(() => setError(''), 4000);
     }
   };
 
@@ -158,25 +154,6 @@ const AdminTables = () => {
                   {editingTable ? 'Edit Table' : 'Add Table'}
                 </h3>
 
-                {/* Toast Notifications */}
-                {error && (
-                  <div className="mb-4 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg animate-slide-down flex items-center gap-3">
-                    <svg className="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p className="text-red-700 font-medium">{error}</p>
-                  </div>
-                )}
-
-                {success && (
-                  <div className="mb-4 bg-green-50 border-l-4 border-green-500 p-4 rounded-lg animate-slide-down flex items-center gap-3">
-                    <svg className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p className="text-green-700 font-medium">{success}</p>
-                  </div>
-                )}
-
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Table Number *</label>
@@ -214,6 +191,26 @@ const AdminTables = () => {
                       placeholder="e.g., Window, Main Hall, Private Room"
                     />
                   </div>
+                  
+                  {/* Error and Success Messages near button */}
+                  {error && (
+                    <div className="bg-red-50 border-2 border-red-300 text-red-700 px-4 py-3 rounded-xl animate-slide-down shadow-md flex items-center gap-2">
+                      <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  {success && (
+                    <div className="bg-green-50 border-2 border-green-300 text-green-700 px-4 py-3 rounded-xl animate-slide-down shadow-md flex items-center gap-2">
+                      <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>{success}</span>
+                    </div>
+                  )}
+                  
                   <div className="flex gap-4">
                     <button
                       type="submit"

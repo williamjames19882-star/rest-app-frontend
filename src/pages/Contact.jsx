@@ -52,19 +52,6 @@ const Contact = () => {
             </p>
           </div>
 
-          {error && (
-            <div className="bg-red-50 border-2 border-red-300 text-red-700 px-4 py-3 rounded-xl mb-6 animate-slide-down shadow-md">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="bg-green-50 border-2 border-green-300 text-green-700 px-4 py-3 rounded-xl mb-6 animate-slide-down shadow-md flex items-center gap-2">
-              <span className="text-2xl">✅</span>
-              <span>{success}</span>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-6 animate-slide-up-delay">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -127,6 +114,25 @@ const Contact = () => {
                 placeholder="Tell us more about your inquiry..."
               ></textarea>
             </div>
+
+            {/* Error and Success Messages near button */}
+            {error && (
+              <div className="bg-red-50 border-2 border-red-300 text-red-700 px-4 py-3 rounded-xl animate-slide-down shadow-md flex items-center gap-2">
+                <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{error}</span>
+              </div>
+            )}
+
+            {success && (
+              <div className="bg-green-50 border-2 border-green-300 text-green-700 px-4 py-3 rounded-xl animate-slide-down shadow-md flex items-center gap-2">
+                <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{success}</span>
+              </div>
+            )}
 
             <div>
               <button
