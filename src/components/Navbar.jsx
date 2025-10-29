@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useHolidayPromo } from '../context/HolidayPromoContext';
 import { navigationItems, ROUTE_PATHS } from '../config/routes';
 
 const Navbar = () => {
   const { token, logout, isAdmin, userName } = useAuth();
+  const { showPopup } = useHolidayPromo();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
@@ -60,6 +62,16 @@ const Navbar = () => {
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-3">
+            {/* Offers Button - Only show for non-admin users */}
+            {!isAdmin && (
+              <button
+                onClick={showPopup}
+                className="px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center gap-2 animate-pulse"
+              >
+                <span>🎁</span>
+                <span>Special Offers</span>
+              </button>
+            )}
             {token ? (
               <>
                 {userName && (
@@ -176,6 +188,18 @@ const Navbar = () => {
                   Logout
                 </button>
               </>
+            )}
+            {/* Offers Button - Mobile - Only show for non-admin users */}
+            {!isAdmin && (
+              <button
+                onClick={() => {
+                  showPopup();
+                  setMobileMenuOpen(false);
+                }}
+                className="block w-full text-left px-3 py-2 rounded-lg text-base font-semibold bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-gray-900 transition-all duration-300 transform hover:scale-105 mb-2"
+              >
+                🎁 Special Offers
+              </button>
             )}
             {!token && (
               <>

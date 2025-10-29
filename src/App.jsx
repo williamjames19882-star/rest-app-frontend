@@ -1,7 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { HolidayPromoProvider } from './context/HolidayPromoContext';
 import Navbar from './components/Navbar';
+import HolidayPromoPopup from './components/HolidayPromoPopup';
 import { routes } from './config/routes';
 
 const PrivateRoute = ({ children }) => {
@@ -18,9 +20,11 @@ const AdminRoute = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-50">
-          <Navbar />
+      <HolidayPromoProvider>
+        <Router>
+          <div className="min-h-screen bg-gray-50">
+            <HolidayPromoPopup />
+            <Navbar />
           <Routes>
             {/* Public routes */}
             {routes.public.map((route) => (
@@ -52,6 +56,7 @@ function App() {
           </Routes>
         </div>
       </Router>
+      </HolidayPromoProvider>
     </AuthProvider>
   );
 }
