@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { HolidayPromoProvider } from './context/HolidayPromoContext';
 import Navbar from './components/Navbar';
 import HolidayPromoPopup from './components/HolidayPromoPopup';
+import ScrollToTop from './components/ScrollToTop';
 import { routes } from './config/routes';
 
 const PrivateRoute = ({ children }) => {
@@ -22,6 +23,7 @@ function App() {
     <AuthProvider>
       <HolidayPromoProvider>
         <Router>
+          <ScrollToTop />
           <div className="min-h-screen bg-gray-50">
             <HolidayPromoPopup />
             <Navbar />

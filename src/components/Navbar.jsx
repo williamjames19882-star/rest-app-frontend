@@ -136,7 +136,7 @@ const Navbar = () => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className="block px-3 py-2 rounded-lg text-base font-medium bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105"
+                    className="block px-3 py-2 rounded-lg text-base font-medium bg-white/10 hover:bg-white/20 transition-all duration-300"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.label}
@@ -148,7 +148,7 @@ const Navbar = () => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className="block px-3 py-2 rounded-lg text-base font-medium bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105"
+                    className="block px-3 py-2 rounded-lg text-base font-medium bg-white/10 hover:bg-white/20 transition-all duration-300"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.label}
