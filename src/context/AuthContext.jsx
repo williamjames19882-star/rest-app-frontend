@@ -13,6 +13,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
+  const [role, setRole] = useState(localStorage.getItem('role'));
 
   useEffect(() => {
     if (token) {
@@ -30,21 +31,36 @@ export const AuthProvider = ({ children }) => {
     }
   }, [userId]);
 
-  const login = (newToken, newUserId) => {
+  useEffect(() => {
+    if (role) {
+      localStorage.setItem('role', role);
+    } else {
+      localStorage.removeItem('role');
+    }
+  }, [role]);
+
+  const login = (newToken, newUserId, newRole) => {
     setToken(newToken);
     setUserId(newUserId);
+    setRole(newRole);
   };
 
   const logout = () => {
     setToken(null);
     setUserId(null);
+    setRole(null);
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
+    localStorage.removeItem('role');
   };
+
+  const isAdmin = role === 'admin';
 
   const value = {
     token,
     userId,
+    role,
+    isAdmin,
     login,
     logout
   };

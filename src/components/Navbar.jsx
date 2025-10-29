@@ -1,60 +1,69 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { navigationItems, ROUTE_PATHS } from '../config/routes';
 
 const Navbar = () => {
-  const { token, logout } = useAuth();
+  const { token, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate(ROUTE_PATHS.LOGIN);
   };
 
   return (
-    <nav className="bg-indigo-600 text-white shadow-lg">
+    <nav className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white shadow-xl sticky top-0 z-50 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-8">
-            <Link to="/" className="text-xl font-bold">
-              🍽️ Restaurant App
+          <div className="flex items-center">
+            <Link to={ROUTE_PATHS.HOME} className="text-lg sm:text-xl font-bold hover:scale-105 transition-transform duration-300 flex items-center gap-2">
+              <span className="text-2xl animate-pulse">🍽️</span>
+              <span className="text-white drop-shadow-md">
+                Restaurant App
+              </span>
             </Link>
-            <div className="hidden md:flex space-x-4">
-              <Link 
-                to="/" 
-                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition"
-              >
-                Home
-              </Link>
-              <Link 
-                to="/menu" 
-                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition"
-              >
-                Menu
-              </Link>
-              {token && (
-                <>
-                  <Link 
-                    to="/book-table" 
-                    className="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition"
-                  >
-                    Book Table
-                  </Link>
-                  <Link 
-                    to="/my-reservations" 
-                    className="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition"
-                  >
-                    My Reservations
-                  </Link>
-                </>
-              )}
+                <div className="hidden md:flex space-x-2 ml-8">
+                  {/* Public navigation - only show for non-admin users */}
+                  {!isAdmin && navigationItems.public.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className="px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+              
+                  {/* Authenticated navigation */}
+                  {token && navigationItems.authenticated.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className="px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+              
+              {/* Admin navigation */}
+              {token && isAdmin && navigationItems.admin.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className="px-4 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             {token ? (
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 rounded-md text-sm font-medium bg-red-500 hover:bg-red-600 transition"
+                className="px-5 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
               >
                 Logout
               </button>
@@ -62,13 +71,105 @@ const Navbar = () => {
               <>
                 <Link 
                   to="/login"
-                  className="px-4 py-2 rounded-md text-sm font-medium bg-indigo-700 hover:bg-indigo-800 transition"
+                  className="px-5 py-2 rounded-lg text-sm font-semibold bg-white/10 hover:bg-white/20 transition-all duration-300 transform hover:scale-105"
                 >
                   Login
                 </Link>
                 <Link 
                   to="/signup"
-                  className="px-4 py-2 rounded-md text-sm font-medium bg-green-600 hover:bg-green-700 transition"
+                  className="px-5 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
+          
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-white/20 transition-all duration-300"
+            >
+              {mobileMenuOpen ? (
+                <svg className="h-6 w-6 transform rotate-180 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="h-6 w-6 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+          {/* Mobile menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden animate-slide-down">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gradient-to-b from-indigo-800 to-purple-800">
+                {/* Public navigation - only show for non-admin users */}
+                {!isAdmin && navigationItems.public.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className="block px-3 py-2 rounded-lg text-base font-semibold bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 hover:translate-x-2 transition-all duration-300"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+            
+            {/* Authenticated navigation */}
+            {token && navigationItems.authenticated.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="block px-3 py-2 rounded-lg text-base font-semibold bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 hover:translate-x-2 transition-all duration-300"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            
+            {/* Admin navigation */}
+            {token && isAdmin && navigationItems.admin.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="block px-3 py-2 rounded-lg text-base font-medium bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            
+            {/* Logout button */}
+            {token && (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMobileMenuOpen(false);
+                }}
+                className="block w-full text-left px-3 py-2 rounded-lg text-base font-medium bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105"
+              >
+                Logout
+              </button>
+            )}
+            {!token && (
+              <>
+                <Link 
+                  to={ROUTE_PATHS.LOGIN}
+                  className="block px-3 py-2 rounded-lg text-base font-medium bg-white/10 hover:bg-white/20 transition-all duration-300"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link 
+                  to={ROUTE_PATHS.SIGNUP}
+                  className="block px-3 py-2 rounded-lg text-base font-medium bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Sign Up
                 </Link>
@@ -76,7 +177,7 @@ const Navbar = () => {
             )}
           </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };

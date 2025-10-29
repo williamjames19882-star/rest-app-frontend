@@ -49,10 +49,11 @@ Launches the test runner in the interactive watch mode.
 ## Features
 
 - **Home Page**: Welcome page with overview
-- **Login/Signup**: User authentication
+- **Login/Signup**: User authentication with role support
 - **Menu**: Browse restaurant menu with filtering by category
-- **Book Table**: Make table reservations
+- **Book Table**: Make table reservations (authenticated users)
 - **My Reservations**: View your booking history
+- **Admin Dashboard**: Manage users, reservations, and menu (admin only)
 
 ## Technologies
 

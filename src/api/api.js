@@ -41,5 +41,33 @@ export const reservationsAPI = {
     api.get('/reservations/my-reservations'),
 };
 
+// Contact API
+export const contactAPI = {
+  submitRequest: (contactData) => api.post('/contact', contactData),
+};
+
+// Admin API
+export const adminAPI = {
+  getAllUsers: (search) => api.get('/admin/users', { params: { search } }),
+  getAllReservations: () => api.get('/admin/reservations'),
+  getStats: () => api.get('/admin/stats'),
+  createMenuItem: (formData) => api.post('/admin/menu/items', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  updateMenuItem: (id, formData) => api.put(`/admin/menu/items/${id}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteMenuItem: (id) => api.delete(`/admin/menu/items/${id}`),
+  updateReservationStatus: (id, status) => api.put(`/admin/reservations/${id}/status`, { status }),
+  // Table management
+  getAllTables: () => api.get('/admin/tables'),
+  createTable: (tableData) => api.post('/admin/tables', tableData),
+  updateTable: (id, tableData) => api.put(`/admin/tables/${id}`, tableData),
+  deleteTable: (id) => api.delete(`/admin/tables/${id}`),
+  // Contact requests
+  getAllContactRequests: () => api.get('/admin/contact-requests'),
+  updateContactRequestStatus: (id, status) => api.put(`/admin/contact-requests/${id}/status`, { status }),
+};
+
 export default api;
 
