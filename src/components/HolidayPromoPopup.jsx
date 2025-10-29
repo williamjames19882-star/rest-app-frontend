@@ -42,21 +42,21 @@ const HolidayPromoPopup = () => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4 animate-fade-in"
+      className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-start sm:items-center justify-center p-2 sm:p-4 animate-fade-in overflow-y-auto overflow-x-hidden scrollbar-hide"
       onClick={handleBackdropClick}
     >
       <div 
-        className="bg-gradient-to-br from-red-600 via-red-500 to-green-600 rounded-2xl shadow-2xl max-w-2xl w-full p-6 sm:p-8 relative animate-slide-down overflow-hidden"
+        className="bg-gradient-to-br from-red-600 via-red-500 to-green-600 rounded-xl sm:rounded-2xl shadow-2xl max-w-[95vw] sm:max-w-2xl w-full p-4 sm:p-6 md:p-8 my-4 sm:my-8 relative animate-slide-down overflow-x-hidden max-h-[95vh] sm:max-h-[90vh] flex flex-col"
         onClick={handleContentClick}
       >
         {/* Close button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors duration-200 bg-black bg-opacity-30 rounded-full p-2 hover:bg-opacity-50 z-20"
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 text-white hover:text-gray-200 transition-colors duration-200 bg-black bg-opacity-50 sm:bg-opacity-30 rounded-full p-2 hover:bg-opacity-70 sm:hover:bg-opacity-50 z-30"
           aria-label="Close"
           type="button"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -69,49 +69,49 @@ const HolidayPromoPopup = () => {
           <div className="absolute bottom-8 right-12 text-3xl animate-pulse delay-150" style={{ animationDelay: '1.5s' }}>❄️</div>
         </div>
 
-        <div className="relative z-10">
+        <div className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden min-h-0 scrollbar-hide">
           {/* Header */}
-          <div className="text-center mb-6">
-            <div className="text-6xl mb-4 animate-bounce">🎄</div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+          <div className="text-center mb-4 sm:mb-6">
+            <div className="text-4xl sm:text-5xl md:text-6xl mb-2 sm:mb-4 animate-bounce">🎄</div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg break-words">
               Holiday Special Booking
             </h2>
-            <p className="text-xl sm:text-2xl text-white font-semibold drop-shadow-md">
+            <p className="text-lg sm:text-xl md:text-2xl text-white font-semibold drop-shadow-md break-words">
               Christmas & Thanksgiving
             </p>
           </div>
 
           {/* Discount badge */}
-          <div className="bg-yellow-400 text-red-700 rounded-xl p-4 mb-6 text-center transform rotate-2 hover:rotate-0 transition-transform duration-300 shadow-xl">
-            <p className="text-2xl sm:text-3xl font-bold">
+          <div className="bg-yellow-400 text-red-700 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 text-center transform rotate-2 hover:rotate-0 transition-transform duration-300 shadow-xl overflow-hidden">
+            <p className="text-lg sm:text-2xl md:text-3xl font-bold break-words">
               🎁 Book in Advance & Get 10% OFF!
             </p>
           </div>
 
           {/* Content */}
-          <div className="bg-white bg-opacity-95 rounded-xl p-6 mb-6 space-y-4">
+          <div className="bg-white bg-opacity-95 rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 mb-4 sm:mb-6 space-y-3 sm:space-y-4 overflow-hidden">
             <div className="flex items-start space-x-3">
-              <span className="text-2xl">🎉</span>
-              <div>
-                <h3 className="font-bold text-gray-800 text-lg mb-1">Party Orders</h3>
-                <p className="text-gray-700">
+              <span className="text-2xl flex-shrink-0">🎉</span>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-bold text-gray-800 text-lg mb-1 break-words">Party Orders</h3>
+                <p className="text-gray-700 break-words">
                   We cater for large parties from <strong className="text-green-600">50 to 1,000 people</strong>
                 </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-3">
-              <span className="text-2xl">🏠</span>
-              <div>
-                <h3 className="font-bold text-gray-800 text-lg mb-1">Private Party Hosting</h3>
-                <p className="text-gray-700">
+              <span className="text-2xl flex-shrink-0">🏠</span>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-bold text-gray-800 text-lg mb-1 break-words">Private Party Hosting</h3>
+                <p className="text-gray-700 break-words">
                   We host parties from <strong className="text-green-600">5 to 60 people</strong> at our venue
                 </p>
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-red-50 to-green-50 rounded-lg p-4 border-l-4 border-yellow-500 mt-4">
-              <p className="text-gray-800 font-semibold">
+            <div className="bg-gradient-to-r from-red-50 to-green-50 rounded-lg p-4 border-l-4 border-yellow-500 mt-4 overflow-hidden">
+              <p className="text-gray-800 font-semibold break-words">
                 ⚡ <strong>Book now</strong> for Christmas and Thanksgiving to secure your spot and enjoy our special 10% discount!
               </p>
             </div>
@@ -146,7 +146,7 @@ const HolidayPromoPopup = () => {
           </div>
 
           {/* Footer note */}
-          <p className="text-center text-white text-sm mt-4 opacity-90">
+          <p className="text-center text-white text-sm mt-4 opacity-90 break-words px-2">
             * Discount applies to advance bookings for Christmas & Thanksgiving
           </p>
         </div>
@@ -168,6 +168,17 @@ const HolidayPromoPopup = () => {
         .delay-75 { animation: delay-75 2s ease-in-out infinite; animation-delay: 0.5s; }
         .delay-100 { animation: delay-100 2s ease-in-out infinite; animation-delay: 1s; }
         .delay-150 { animation: delay-150 2s ease-in-out infinite; animation-delay: 1.5s; }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .scrollbar-hide {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+        }
       `}</style>
     </div>
   );
