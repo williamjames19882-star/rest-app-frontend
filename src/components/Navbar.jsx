@@ -23,7 +23,7 @@ const Navbar = () => {
             <Link to={ROUTE_PATHS.HOME} className="text-lg sm:text-xl font-bold hover:scale-105 transition-transform duration-300 flex items-center gap-2">
               <span className="text-2xl animate-pulse">🍽️</span>
               <span className="text-white drop-shadow-md">
-                Restaurant App
+                Spice and Sizzle
               </span>
             </Link>
                 <div className="hidden md:flex space-x-2 ml-8">

@@ -32,7 +32,10 @@ const AdminReservations = () => {
         res.id === id ? { ...res, status: newStatus } : res
       ));
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to update reservation status.');
+      const msg = err.response?.status === 409
+        ? 'Cannot confirm: table is already booked for that slot.'
+        : (err.response?.data?.error || 'Failed to update reservation status.');
+      alert(msg);
     }
   };
 

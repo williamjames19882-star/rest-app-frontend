@@ -109,3 +109,12 @@ html {
   background: linear-gradient(to bottom, #5a67d8, #6b46c1);
 }
 
+/* Hide scrollbars globally while preserving scroll behavior */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;    /* Firefox */
+}
+*::-webkit-scrollbar {
+  display: none;            /* Chrome, Safari, Opera */
+}
+

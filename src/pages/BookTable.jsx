@@ -72,6 +72,19 @@ const BookTable = () => {
     setLoading(true);
 
     try {
+      // Final availability check before booking
+      try {
+        const latest = await reservationsAPI.getAvailableTables(formData.date, formData.time);
+        const stillAvailable = (latest.data || []).some(t => t.id === selectedTable);
+        if (!stillAvailable) {
+          setError('Selected table is no longer available. Please choose another table.');
+          setLoading(false);
+          return;
+        }
+      } catch (_) {
+        // If the availability check fails, continue to server which will enforce
+      }
+
       await reservationsAPI.createReservation({
         table_id: selectedTable,
         date: formData.date,
@@ -85,7 +98,11 @@ const BookTable = () => {
         navigate('/my-reservations');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to book table. Please try again.');
+      if (err.response?.status === 409) {
+        setError('This table is already booked for the selected date and time.');
+      } else {
+        setError(err.response?.data?.error || 'Failed to book table. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -102,39 +119,41 @@ const BookTable = () => {
             <p className="text-gray-600 mt-2">Reserve your dining experience</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
-                Date *
-              </label>
-              <input
-                id="date"
-                name="date"
-                type="date"
-                required
-                min={new Date().toISOString().split('T')[0]}
-                value={formData.date}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
-              />
+          <form onSubmit={handleSubmit} className="space-y-6 overflow-visible">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-1">
+              <div className="min-w-0">
+                <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
+                  Date *
+                </label>
+                <input
+                  id="date"
+                  name="date"
+                  type="date"
+                  required
+                  min={new Date().toISOString().split('T')[0]}
+                  value={formData.date}
+                  onChange={handleChange}
+                  className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                />
+              </div>
+
+              <div className="min-w-0">
+                <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-2">
+                  Time *
+                </label>
+                <input
+                  id="time"
+                  name="time"
+                  type="time"
+                  required
+                  value={formData.time}
+                  onChange={handleChange}
+                  className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                />
+              </div>
             </div>
 
-            <div>
-              <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-2">
-                Time *
-              </label>
-              <input
-                id="time"
-                name="time"
-                type="time"
-                required
-                value={formData.time}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
-              />
-            </div>
-
-            <div>
+            <div className="min-w-0">
               <label htmlFor="number_of_guests" className="block text-sm font-medium text-gray-700 mb-2">
                 Number of Guests *
               </label>
@@ -146,11 +165,11 @@ const BookTable = () => {
                 required
                 value={formData.number_of_guests}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
               />
             </div>
 
-            <div>
+            <div className="min-w-0">
               <label htmlFor="special_requests" className="block text-sm font-medium text-gray-700 mb-2">
                 Special Requests
               </label>
@@ -160,7 +179,7 @@ const BookTable = () => {
                 rows="4"
                 value={formData.special_requests}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 resize-none"
+                className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 resize-none"
                 placeholder="Any special requests or dietary requirements..."
               ></textarea>
             </div>
@@ -179,15 +198,15 @@ const BookTable = () => {
                 ) : availableTables.length === 0 ? (
                   <p className="text-red-600">No tables available for this date and time.</p>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 px-1">
                     {availableTables.map((table) => (
                       <button
                         key={table.id}
                         type="button"
                         onClick={() => setSelectedTable(table.id)}
-                        className={`p-4 border-2 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${
+                        className={`p-4 border-2 rounded-xl transition-all duration-300 transform sm:hover:scale-105 sm:hover:shadow-lg ${
                           selectedTable === table.id
-                            ? 'border-indigo-600 bg-gradient-to-br from-indigo-50 to-purple-50 scale-105 shadow-lg'
+                            ? 'border-indigo-600 bg-gradient-to-br from-indigo-50 to-purple-50 sm:scale-105 shadow-lg'
                             : 'border-gray-300 hover:border-indigo-400 bg-white'
                         }`}
                       >

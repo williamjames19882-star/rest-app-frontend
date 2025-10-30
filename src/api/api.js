@@ -67,6 +67,16 @@ export const adminAPI = {
   // Contact requests
   getAllContactRequests: () => api.get('/admin/contact-requests'),
   updateContactRequestStatus: (id, status) => api.put(`/admin/contact-requests/${id}/status`, { status }),
+  // Banners
+  getAllBanners: () => api.get('/admin/banners'),
+  createBanner: (formData) => api.post('/admin/banners', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  updateBanner: (id, formData) => api.put(`/admin/banners/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  deleteBanner: (id) => api.delete(`/admin/banners/${id}`),
+};
+
+// Public banners API
+export const bannersAPI = {
+  getActive: () => api.get('/banners'),
 };
 
 export default api;

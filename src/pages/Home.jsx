@@ -2,12 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ROUTE_PATHS } from '../config/routes';
+import BannerCarousel from '../components/BannerCarousel';
 
 const Home = () => {
   const { token } = useAuth();
 
   return (
     <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white">
+      <BannerCarousel />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24">
         <div className="text-center animate-fade-in">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-white drop-shadow-lg">
