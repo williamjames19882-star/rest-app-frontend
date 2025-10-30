@@ -41,9 +41,12 @@ const Login = () => {
       <div className="max-w-md w-full space-y-8 bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-white/50 animate-fade-in">
         <div>
           <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-3 rounded-full animate-pulse">
-              <span className="text-4xl">🍽️</span>
-            </div>
+            <img
+              src="/icon.svg"
+              alt="Spice and Sizzle"
+              className="w-20 h-20 object-cover rounded-full shadow-md"
+              onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/icon.png'; }}
+            />
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
             Sign in to your account

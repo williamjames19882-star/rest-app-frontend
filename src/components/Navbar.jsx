@@ -21,7 +21,12 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link to={ROUTE_PATHS.HOME} className="text-lg sm:text-xl font-bold hover:scale-105 transition-transform duration-300 flex items-center gap-2">
-              <span className="text-2xl animate-pulse">🍽️</span>
+              <img
+                src="/icon.svg"
+                alt="Spice and Sizzle"
+                className="h-8 w-8 sm:h-10 sm:w-10 rounded-full block"
+                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/icon.png'; }}
+              />
               <span className="text-white drop-shadow-md">
                 Spice and Sizzle
               </span>
