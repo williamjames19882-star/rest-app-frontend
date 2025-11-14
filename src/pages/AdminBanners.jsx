@@ -183,7 +183,10 @@ const AdminBanners = () => {
           <button
             type="submit"
             disabled={saving}
-            className="px-4 py-2 rounded bg-indigo-600 text-white disabled:opacity-60"
+            className="px-4 py-2 rounded text-white disabled:opacity-60"
+            style={{ backgroundColor: '#122d4b' }}
+            onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+            onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#122d4b')}
           >
             {saving ? 'Saving...' : editing ? 'Update Banner' : 'Create Banner'}
           </button>
@@ -245,5 +248,4 @@ const AdminBanners = () => {
 };
 
 export default AdminBanners;
-
 

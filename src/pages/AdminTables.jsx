@@ -120,14 +120,17 @@ const AdminTables = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-8 animate-fade-in">
           <div>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold" style={{ color: '#122d4b' }}>
               Manage Tables
             </h2>
             <p className="text-gray-600 mt-2">Add, edit, or delete restaurant tables</p>
           </div>
           <button
             onClick={() => setIsFormOpen(true)}
-            className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+            className="px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+            style={{ backgroundColor: '#122d4b' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
           >
             + Add Table
           </button>
@@ -150,7 +153,7 @@ const AdminTables = () => {
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
             <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-slide-up">
               <div className="p-6">
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">
+                <h3 className="text-2xl font-bold mb-6" style={{ color: '#122d4b' }}>
                   {editingTable ? 'Edit Table' : 'Add Table'}
                 </h3>
 
@@ -215,7 +218,10 @@ const AdminTables = () => {
                     <button
                       type="submit"
                       disabled={saving}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      className="flex-1 px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      style={{ backgroundColor: '#122d4b' }}
+                      onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+                      onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#122d4b')}
                     >
                       {saving ? (
                         <span className="flex items-center justify-center">
@@ -246,7 +252,7 @@ const AdminTables = () => {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#122d4b' }}></div>
             <p className="mt-4 text-gray-600">Loading tables...</p>
           </div>
         ) : (
@@ -254,16 +260,16 @@ const AdminTables = () => {
             {tables.map((table, index) => (
               <div
                 key={table.id}
-                className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 group animate-fade-in border-l-4 border-gradient-to-b from-indigo-500 to-purple-500"
-                style={{ animationDelay: `${index * 100}ms`, borderLeftColor: '#667eea' }}
+                className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 group animate-fade-in border-l-4"
+                style={{ animationDelay: `${index * 100}ms`, borderLeftColor: '#122d4b' }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" style={{ backgroundColor: '#122d4b' }}>
                       🪑
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                      <h3 className="text-xl font-bold" style={{ color: '#122d4b' }}>
                         {table.table_number}
                       </h3>
                       <p className="text-sm text-gray-500">{table.location}</p>
@@ -271,14 +277,17 @@ const AdminTables = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="px-3 py-1 bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 text-xs font-semibold rounded-full">
+                  <span className="px-3 py-1 text-xs font-semibold rounded-full" style={{ backgroundColor: '#e8f0f8', color: '#122d4b' }}>
                     Capacity: {table.capacity}
                   </span>
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEdit(table)}
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 font-semibold"
+                    className="flex-1 px-4 py-2 text-white rounded-lg transition-all duration-300 font-semibold"
+                    style={{ backgroundColor: '#122d4b' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
                   >
                     Edit
                   </button>

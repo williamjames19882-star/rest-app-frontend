@@ -48,7 +48,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 animate-fade-in">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold" style={{ color: '#122d4b' }}>
             Admin Dashboard
           </h2>
           <p className="text-gray-600 mt-2">Manage your restaurant operations</p>
@@ -62,7 +62,7 @@ const AdminDashboard = () => {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#122d4b' }}></div>
             <p className="mt-4 text-gray-600">Loading statistics...</p>
           </div>
         ) : stats && (
@@ -128,11 +128,14 @@ const AdminDashboard = () => {
 
             {/* Quick Actions */}
             <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-white/50 animate-fade-in">
-              <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">Quick Actions</h3>
+              <h3 className="text-xl font-bold mb-6" style={{ color: '#122d4b' }}>Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                 <Link 
                   to={ROUTE_PATHS.ADMIN_RESERVATIONS}
-                  className="p-6 border-2 border-gray-300 rounded-2xl hover:border-indigo-600 transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
+                  className="p-6 border-2 border-gray-300 rounded-2xl transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
+                  style={{ borderColor: 'inherit' }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = '#122d4b'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
                 >
                   <div className="text-5xl mb-3 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">📅</div>
                   <h4 className="font-bold text-gray-900">Reservations</h4>
@@ -140,7 +143,10 @@ const AdminDashboard = () => {
                 </Link>
                 <Link 
                   to={ROUTE_PATHS.ADMIN_MENU}
-                  className="p-6 border-2 border-gray-300 rounded-2xl hover:border-indigo-600 transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
+                  className="p-6 border-2 border-gray-300 rounded-2xl transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
+                  style={{ borderColor: 'inherit' }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = '#122d4b'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
                 >
                   <div className="text-5xl mb-3 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">🍽️</div>
                   <h4 className="font-bold text-gray-900">Manage Menu</h4>
@@ -148,7 +154,10 @@ const AdminDashboard = () => {
                 </Link>
                 <Link 
                   to={ROUTE_PATHS.ADMIN_TABLES}
-                  className="p-6 border-2 border-gray-300 rounded-2xl hover:border-indigo-600 transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
+                  className="p-6 border-2 border-gray-300 rounded-2xl transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
+                  style={{ borderColor: 'inherit' }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = '#122d4b'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
                 >
                   <div className="text-5xl mb-3 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">🪑</div>
                   <h4 className="font-bold text-gray-900">Tables</h4>
@@ -156,7 +165,10 @@ const AdminDashboard = () => {
                 </Link>
                 <Link 
                   to={ROUTE_PATHS.ADMIN_CONTACT_REQUESTS}
-                  className="p-6 border-2 border-gray-300 rounded-2xl hover:border-indigo-600 transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
+                  className="p-6 border-2 border-gray-300 rounded-2xl transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
+                  style={{ borderColor: 'inherit' }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = '#122d4b'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
                 >
                   <div className="text-5xl mb-3 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">📧</div>
                   <h4 className="font-bold text-gray-900">Contact</h4>
@@ -164,7 +176,10 @@ const AdminDashboard = () => {
                 </Link>
                 <Link 
                   to={ROUTE_PATHS.ADMIN_USERS}
-                  className="p-6 border-2 border-gray-300 rounded-2xl hover:border-indigo-600 transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
+                  className="p-6 border-2 border-gray-300 rounded-2xl transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
+                  style={{ borderColor: 'inherit' }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = '#122d4b'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
                 >
                   <div className="text-5xl mb-3 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">👥</div>
                   <h4 className="font-bold text-gray-900">Users</h4>

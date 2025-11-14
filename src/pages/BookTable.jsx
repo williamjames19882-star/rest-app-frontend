@@ -7,6 +7,8 @@ const BookTable = () => {
     date: '',
     time: '',
     number_of_guests: '',
+    mobile_number: '',
+    email: '',
     special_requests: ''
   });
   const [availableTables, setAvailableTables] = useState([]);
@@ -64,7 +66,7 @@ const BookTable = () => {
       return;
     }
 
-    if (!formData.date || !formData.time || !formData.number_of_guests) {
+    if (!formData.date || !formData.time || !formData.number_of_guests || !formData.mobile_number) {
       setError('Please fill in all required fields');
       return;
     }
@@ -90,12 +92,14 @@ const BookTable = () => {
         date: formData.date,
         time: formData.time,
         number_of_guests: parseInt(formData.number_of_guests),
+        mobile_number: formData.mobile_number,
+        email: formData.email || null,
         special_requests: formData.special_requests
       });
 
       setSuccess('Table booked successfully!');
       setTimeout(() => {
-        navigate('/my-reservations');
+        navigate('/');
       }, 2000);
     } catch (err) {
       if (err.response?.status === 409) {
@@ -113,7 +117,7 @@ const BookTable = () => {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-6 sm:p-8 border border-white/50 animate-fade-in">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold" style={{ color: '#122d4b' }}>
               Book a Table
             </h2>
             <p className="text-gray-600 mt-2">Reserve your dining experience</p>
@@ -153,18 +157,51 @@ const BookTable = () => {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-1">
+              <div className="min-w-0">
+                <label htmlFor="number_of_guests" className="block text-sm font-medium text-gray-700 mb-2">
+                  Number of Guests *
+                </label>
+                <input
+                  id="number_of_guests"
+                  name="number_of_guests"
+                  type="number"
+                  min="1"
+                  required
+                  value={formData.number_of_guests}
+                  onChange={handleChange}
+                  className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                />
+              </div>
+
+              <div className="min-w-0">
+                <label htmlFor="mobile_number" className="block text-sm font-medium text-gray-700 mb-2">
+                  Mobile Number *
+                </label>
+                <input
+                  id="mobile_number"
+                  name="mobile_number"
+                  type="tel"
+                  required
+                  value={formData.mobile_number}
+                  onChange={handleChange}
+                  placeholder="+1234567890"
+                  className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                />
+              </div>
+            </div>
+
             <div className="min-w-0">
-              <label htmlFor="number_of_guests" className="block text-sm font-medium text-gray-700 mb-2">
-                Number of Guests *
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Email (Optional)
               </label>
               <input
-                id="number_of_guests"
-                name="number_of_guests"
-                type="number"
-                min="1"
-                required
-                value={formData.number_of_guests}
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
                 onChange={handleChange}
+                placeholder="your.email@example.com"
                 className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
               />
             </div>
@@ -192,7 +229,7 @@ const BookTable = () => {
                 </label>
                 {checkingTables ? (
                   <div className="text-center py-4">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#122d4b' }}></div>
                     <p className="mt-2 text-gray-600">Checking available tables...</p>
                   </div>
                 ) : availableTables.length === 0 ? (
@@ -206,11 +243,14 @@ const BookTable = () => {
                         onClick={() => setSelectedTable(table.id)}
                         className={`p-4 border-2 rounded-xl transition-all duration-300 transform sm:hover:scale-105 sm:hover:shadow-lg ${
                           selectedTable === table.id
-                            ? 'border-indigo-600 bg-gradient-to-br from-indigo-50 to-purple-50 sm:scale-105 shadow-lg'
-                            : 'border-gray-300 hover:border-indigo-400 bg-white'
+                            ? 'sm:scale-105 shadow-lg'
+                            : 'border-gray-300 bg-white'
                         }`}
+                        style={selectedTable === table.id ? { borderColor: '#122d4b', backgroundColor: '#f0f4f8' } : {}}
+                        onMouseEnter={(e) => selectedTable !== table.id && (e.currentTarget.style.borderColor = '#122d4b')}
+                        onMouseLeave={(e) => selectedTable !== table.id && (e.currentTarget.style.borderColor = '#d1d5db')}
                       >
-                        <div className="font-bold text-lg text-indigo-600">{table.table_number}</div>
+                        <div className="font-bold text-lg" style={{ color: selectedTable === table.id ? '#122d4b' : '#122d4b' }}>{table.table_number}</div>
                         <div className="text-sm text-gray-600 font-medium">Capacity: {table.capacity}</div>
                         <div className="text-sm text-gray-500">{table.location}</div>
                       </button>
@@ -243,7 +283,10 @@ const BookTable = () => {
               <button
                 type="submit"
                 disabled={loading || !selectedTable}
-                className="w-full py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 hover:from-indigo-700 hover:via-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                className="w-full py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                style={{ backgroundColor: '#122d4b' }}
+                onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+                onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#122d4b')}
               >
                 {loading ? (
                   <span className="flex items-center justify-center">

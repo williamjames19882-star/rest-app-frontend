@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { menuAPI } from '../api/api';
+import { useCart } from '../context/CartContext';
 
 const Menu = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { addToCart, updateQuantity, getItemQuantity } = useCart();
 
   useEffect(() => {
     fetchCategories();
-    fetchMenuItems();
+    // Check for category in URL params
+    const categoryParam = searchParams.get('category');
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
   }, []);
 
   useEffect(() => {
@@ -44,37 +52,48 @@ const Menu = () => {
     return `$${parseFloat(price).toFixed(2)}`;
   };
 
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    if (category) {
+      setSearchParams({ category });
+    } else {
+      setSearchParams({});
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 py-6 sm:py-12">
+    <div className="min-h-screen bg-gray-50 py-6 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 animate-fade-in">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+        <div className="mb-8 animate-fade-in text-center">
+          <h2 className="text-4xl font-bold text-gray-900 mb-2">
             Our Menu
           </h2>
-          <p className="text-gray-600 mt-2">Delicious dishes made with the finest ingredients</p>
+          <p className="text-gray-600 text-lg">Delicious dishes made with the finest ingredients</p>
         </div>
 
         {/* Category Filter */}
         <div className="mb-6 sm:mb-8 flex flex-wrap justify-center gap-2 overflow-x-auto pb-2 animate-slide-up">
           <button
-            onClick={() => setSelectedCategory('')}
-            className={`px-4 sm:px-6 py-2 rounded-full font-medium transition-all duration-300 transform hover:scale-105 text-sm sm:text-base whitespace-nowrap ${
+            onClick={() => handleCategoryChange('')}
+            className={`px-4 sm:px-6 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-sm sm:text-base whitespace-nowrap ${
               selectedCategory === ''
-                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
+            style={selectedCategory === '' ? { backgroundColor: '#122d4b' } : {}}
           >
             All
           </button>
           {categories.map((category) => (
             <button
               key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 sm:px-6 py-2 rounded-full font-medium transition-all duration-300 transform hover:scale-105 text-sm sm:text-base whitespace-nowrap ${
+              onClick={() => handleCategoryChange(category)}
+              className={`px-4 sm:px-6 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-sm sm:text-base whitespace-nowrap ${
                 selectedCategory === category
-                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                  ? 'text-white shadow-lg'
                   : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
               }`}
+              style={selectedCategory === category ? { backgroundColor: '#122d4b' } : {}}
             >
               {category}
             </button>
@@ -90,7 +109,7 @@ const Menu = () => {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
             <p className="mt-4 text-gray-600">Loading menu...</p>
           </div>
         ) : (
@@ -127,17 +146,59 @@ const Menu = () => {
                   </div>
                   <div className="p-4 sm:p-6">
                     <div className="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2">
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors duration-300">
                         {item.name}
                       </h3>
-                      <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent whitespace-nowrap">
+                      <span className="text-xl sm:text-2xl font-bold text-gray-900 whitespace-nowrap">
                         {formatPrice(item.price)}
                       </span>
                     </div>
                     <p className="text-gray-600 text-xs sm:text-sm mb-3">{item.description}</p>
-                    <span className="inline-block bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 text-xs font-semibold px-3 py-1.5 rounded-full">
-                      {item.category}
-                    </span>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="inline-block bg-gray-100 text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full">
+                        {item.category}
+                      </span>
+                      {getItemQuantity(item.id) > 0 ? (
+                        <div className="flex items-center gap-2 rounded-lg" style={{ border: '2px solid #122d4b' }}>
+                          <button
+                            onClick={() => updateQuantity(item.id, getItemQuantity(item.id) - 1)}
+                            className="px-3 py-2 transition-colors font-semibold"
+                            style={{ color: '#122d4b' }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                            aria-label="Decrease quantity"
+                          >
+                            −
+                          </button>
+                          <span className="px-4 py-2 font-semibold min-w-[2rem] text-center" style={{ color: '#122d4b' }}>
+                            {getItemQuantity(item.id)}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(item.id, getItemQuantity(item.id) + 1)}
+                            className="px-3 py-2 transition-colors font-semibold"
+                            style={{ color: '#122d4b' }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                            aria-label="Increase quantity"
+                          >
+                            +
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => addToCart(item)}
+                          className="px-4 py-2 text-white text-sm font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+                          style={{ backgroundColor: '#122d4b' }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
+                        >
+                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                          Add to Cart
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))

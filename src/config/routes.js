@@ -10,8 +10,13 @@ import AdminMenu from '../pages/AdminMenu';
 import AdminUsers from '../pages/AdminUsers';
 import AdminTables from '../pages/AdminTables';
 import AdminBanners from '../pages/AdminBanners';
+import AdminTransactions from '../pages/AdminTransactions';
 import Contact from '../pages/Contact';
 import AdminContactRequests from '../pages/AdminContactRequests';
+import Gallery from '../pages/Gallery';
+import About from '../pages/About';
+import Cart from '../pages/Cart';
+import TransactionHistory from '../pages/TransactionHistory';
 
 // Route configuration
 export const routes = {
@@ -33,6 +38,16 @@ export const routes = {
       exact: true,
     },
     {
+      path: '/gallery',
+      element: <Gallery />,
+      exact: true,
+    },
+    {
+      path: '/about',
+      element: <About />,
+      exact: true,
+    },
+    {
       path: '/login',
       element: <Login />,
       exact: true,
@@ -42,18 +57,28 @@ export const routes = {
       element: <Signup />,
       exact: true,
     },
-  ],
-
-  // Protected routes (requires authentication)
-  protected: [
+    {
+      path: '/cart',
+      element: <Cart />,
+      exact: true,
+    },
     {
       path: '/book-table',
       element: <BookTable />,
       exact: true,
     },
+  ],
+
+  // Protected routes (requires authentication)
+  protected: [
     {
       path: '/my-reservations',
       element: <MyReservations />,
+      exact: true,
+    },
+    {
+      path: '/transaction-history',
+      element: <TransactionHistory />,
       exact: true,
     },
   ],
@@ -95,6 +120,11 @@ export const routes = {
       element: <AdminContactRequests />,
       exact: true,
     },
+    {
+      path: '/admin/transactions',
+      element: <AdminTransactions />,
+      exact: true,
+    },
   ],
 
   // Get all routes as a flat array
@@ -111,10 +141,14 @@ export const routes = {
 export const ROUTE_PATHS = {
   HOME: '/',
   MENU: '/menu',
+  GALLERY: '/gallery',
+  ABOUT: '/about',
+  CART: '/cart',
   LOGIN: '/login',
   SIGNUP: '/signup',
   BOOK_TABLE: '/book-table',
   MY_RESERVATIONS: '/my-reservations',
+  TRANSACTION_HISTORY: '/transaction-history',
   ADMIN: '/admin',
   ADMIN_RESERVATIONS: '/admin/reservations',
   ADMIN_MENU: '/admin/menu',
@@ -122,6 +156,7 @@ export const ROUTE_PATHS = {
   ADMIN_TABLES: '/admin/tables',
   ADMIN_BANNERS: '/admin/banners',
   ADMIN_CONTACT_REQUESTS: '/admin/contact-requests',
+  ADMIN_TRANSACTIONS: '/admin/transactions',
   CONTACT: '/contact',
 };
 
@@ -134,14 +169,15 @@ export const navigationItems = {
   ],
   
   authenticated: [
-    { label: 'Book Table', path: ROUTE_PATHS.BOOK_TABLE },
     { label: 'My Reservations', path: ROUTE_PATHS.MY_RESERVATIONS },
+    { label: 'Transaction History', path: ROUTE_PATHS.TRANSACTION_HISTORY },
   ],
   
   admin: [
     { label: 'Dashboard', path: ROUTE_PATHS.ADMIN },
     { label: 'Reservations', path: ROUTE_PATHS.ADMIN_RESERVATIONS },
     { label: 'Banners', path: ROUTE_PATHS.ADMIN_BANNERS },
+    { label: 'Transactions', path: ROUTE_PATHS.ADMIN_TRANSACTIONS },
     // { label: 'Menu', path: ROUTE_PATHS.ADMIN_MENU },
     // { label: 'Tables', path: ROUTE_PATHS.ADMIN_TABLES },
     { label: 'Contact Requests', path: ROUTE_PATHS.ADMIN_CONTACT_REQUESTS },

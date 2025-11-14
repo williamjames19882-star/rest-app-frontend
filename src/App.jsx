@@ -2,9 +2,12 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { HolidayPromoProvider } from './context/HolidayPromoContext';
+import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import HolidayPromoPopup from './components/HolidayPromoPopup';
 import ScrollToTop from './components/ScrollToTop';
+import FloatingCartButton from './components/FloatingCartButton';
 import { routes } from './config/routes';
 
 const PrivateRoute = ({ children }) => {
@@ -21,12 +24,14 @@ const AdminRoute = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
-      <HolidayPromoProvider>
-        <Router>
-          <ScrollToTop />
-          <div className="min-h-screen bg-gray-50">
-            <HolidayPromoPopup />
-            <Navbar />
+      <CartProvider>
+        <HolidayPromoProvider>
+          <Router>
+            <ScrollToTop />
+            <div className="min-h-screen bg-gray-50">
+              <HolidayPromoPopup />
+              <Navbar />
+              <FloatingCartButton />
           <Routes>
             {/* Public routes */}
             {routes.public.map((route) => (
@@ -56,9 +61,11 @@ function App() {
               />
             ))}
           </Routes>
+          <Footer />
         </div>
       </Router>
       </HolidayPromoProvider>
+      </CartProvider>
     </AuthProvider>
   );
 }

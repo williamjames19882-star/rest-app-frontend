@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { authAPI } from '../api/api';
 import { useAuth } from '../context/AuthContext';
+import { ROUTE_PATHS } from '../config/routes';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e) => {
     setFormData({
@@ -28,7 +30,9 @@ const Login = () => {
     try {
       const response = await authAPI.login(formData);
       login(response.data.token, response.data.userId, response.data.role);
-      navigate('/');
+      // Redirect to the page they came from (e.g., cart) or home
+      const from = location.state?.from || ROUTE_PATHS.HOME;
+      navigate(from);
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Please try again.');
     } finally {
@@ -42,10 +46,9 @@ const Login = () => {
         <div>
           <div className="flex justify-center mb-6">
             <img
-              src="/icon.svg"
+              src="/images/title.jpeg"
               alt="Spice and Sizzle"
-              className="w-20 h-20 object-cover rounded-full shadow-md"
-              onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/icon.png'; }}
+              className="h-20 sm:h-24 object-contain shadow-md"
             />
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -104,7 +107,10 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 hover:from-indigo-700 hover:via-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+              style={{ backgroundColor: '#122d4b' }}
+              onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+              onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#122d4b')}
             >
               {loading ? (
                 <span className="flex items-center">

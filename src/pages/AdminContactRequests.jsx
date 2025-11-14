@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { adminAPI } from '../api/api';
+import Pagination from '../components/Pagination';
 
 const AdminContactRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -8,16 +9,29 @@ const AdminContactRequests = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 25,
+    total: 0,
+    totalPages: 0,
+  });
 
   useEffect(() => {
     fetchRequests();
-  }, []);
+  }, [pagination.page, pagination.pageSize]);
 
   const fetchRequests = async () => {
     try {
       setLoading(true);
-      const response = await adminAPI.getAllContactRequests();
-      setRequests(response.data);
+      const response = await adminAPI.getAllContactRequests({
+        page: pagination.page,
+        pageSize: pagination.pageSize,
+      });
+      setRequests(response.data.data || []);
+      setPagination(prev => ({
+        ...prev,
+        ...response.data.pagination,
+      }));
       setError('');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to fetch contact requests.');
@@ -25,6 +39,14 @@ const AdminContactRequests = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePageChange = (newPage) => {
+    setPagination(prev => ({ ...prev, page: newPage }));
+  };
+
+  const handlePageSizeChange = (newPageSize) => {
+    setPagination(prev => ({ ...prev, pageSize: newPageSize, page: 1 }));
   };
 
   const handleStatusChange = async (id, newStatus) => {
@@ -97,7 +119,7 @@ const AdminContactRequests = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 animate-fade-in">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold" style={{ color: '#122d4b' }}>
             Contact Requests
           </h2>
           <p className="text-gray-600 mt-2">View and manage customer inquiries</p>
@@ -109,19 +131,25 @@ const AdminContactRequests = () => {
             onClick={() => setFilterStatus('all')}
             className={`px-4 py-2 rounded-full font-medium transition-all duration-300 transform hover:scale-105 ${
               filterStatus === 'all'
-                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
+            style={filterStatus === 'all' ? { backgroundColor: '#122d4b' } : {}}
+            onMouseEnter={(e) => filterStatus === 'all' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+            onMouseLeave={(e) => filterStatus === 'all' && (e.currentTarget.style.backgroundColor = '#122d4b')}
           >
-            All ({requests.length})
+            All ({pagination.total})
           </button>
           <button
             onClick={() => setFilterStatus('new')}
             className={`px-4 py-2 rounded-full font-medium transition-all duration-300 transform hover:scale-105 ${
               filterStatus === 'new'
-                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
+            style={filterStatus === 'new' ? { backgroundColor: '#122d4b' } : {}}
+            onMouseEnter={(e) => filterStatus === 'new' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+            onMouseLeave={(e) => filterStatus === 'new' && (e.currentTarget.style.backgroundColor = '#122d4b')}
           >
             New ({requests.filter(r => r.status === 'new').length})
           </button>
@@ -129,9 +157,12 @@ const AdminContactRequests = () => {
             onClick={() => setFilterStatus('read')}
             className={`px-4 py-2 rounded-full font-medium transition-all duration-300 transform hover:scale-105 ${
               filterStatus === 'read'
-                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
+            style={filterStatus === 'read' ? { backgroundColor: '#122d4b' } : {}}
+            onMouseEnter={(e) => filterStatus === 'read' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+            onMouseLeave={(e) => filterStatus === 'read' && (e.currentTarget.style.backgroundColor = '#122d4b')}
           >
             Read ({requests.filter(r => r.status === 'read').length})
           </button>
@@ -139,9 +170,12 @@ const AdminContactRequests = () => {
             onClick={() => setFilterStatus('responded')}
             className={`px-4 py-2 rounded-full font-medium transition-all duration-300 transform hover:scale-105 ${
               filterStatus === 'responded'
-                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
+            style={filterStatus === 'responded' ? { backgroundColor: '#122d4b' } : {}}
+            onMouseEnter={(e) => filterStatus === 'responded' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+            onMouseLeave={(e) => filterStatus === 'responded' && (e.currentTarget.style.backgroundColor = '#122d4b')}
           >
             Responded ({requests.filter(r => r.status === 'responded').length})
           </button>
@@ -155,7 +189,7 @@ const AdminContactRequests = () => {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#122d4b' }}></div>
             <p className="mt-4 text-gray-600">Loading requests...</p>
           </div>
         ) : filteredRequests.length === 0 ? (
@@ -175,7 +209,7 @@ const AdminContactRequests = () => {
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center mb-2 flex-wrap gap-2">
-                      <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                      <h3 className="text-xl font-bold" style={{ color: '#122d4b' }}>
                         {request.name}
                       </h3>
                       <span className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(request.status)}`}>
@@ -192,7 +226,7 @@ const AdminContactRequests = () => {
                     </div>
                   </div>
                   <div className="flex items-center">
-                    <svg className="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-5 w-5 text-gray-400 transition-colors" style={{ color: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.color = '#122d4b'} onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
@@ -200,6 +234,17 @@ const AdminContactRequests = () => {
               </div>
             ))}
           </div>
+        )}
+        
+        {!loading && filteredRequests.length > 0 && (
+          <Pagination
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            onPageChange={handlePageChange}
+            pageSize={pagination.pageSize}
+            total={pagination.total}
+            onPageSizeChange={handlePageSizeChange}
+          />
         )}
 
         {/* Contact Request Detail Modal */}
@@ -214,7 +259,7 @@ const AdminContactRequests = () => {
             >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  <h3 className="text-2xl font-bold" style={{ color: '#122d4b' }}>
                     Contact Request Details
                   </h3>
                   <button
@@ -239,7 +284,10 @@ const AdminContactRequests = () => {
                     {(selectedRequest.status === 'new' || selectedRequest.status === 'read') && (
                       <button
                         onClick={() => handleStatusChange(selectedRequest.id, 'responded')}
-                        className="px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                        className="px-6 py-2 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                        style={{ backgroundColor: '#122d4b' }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
                       >
                         Mark as Responded
                       </button>
@@ -247,7 +295,7 @@ const AdminContactRequests = () => {
                   </div>
 
                   {/* User Details */}
-                  <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 space-y-4">
+                  <div className="rounded-xl p-6 space-y-4" style={{ backgroundColor: '#e8f0f8' }}>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
                       <p className="text-lg font-medium text-gray-900">{selectedRequest.name}</p>
@@ -278,7 +326,7 @@ const AdminContactRequests = () => {
                     {selectedRequest.message && (
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Message</label>
-                        <div className="bg-white rounded-lg p-4 border-2 border-indigo-200">
+                        <div className="bg-white rounded-lg p-4 border-2" style={{ borderColor: '#cbd5e1' }}>
                           <p className="text-gray-700 whitespace-pre-wrap">{selectedRequest.message}</p>
                         </div>
                       </div>
@@ -294,7 +342,10 @@ const AdminContactRequests = () => {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={handleCloseModal}
-                    className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                    className="px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                    style={{ backgroundColor: '#122d4b' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
                   >
                     Close
                   </button>

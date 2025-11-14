@@ -8,74 +8,113 @@ const Home = () => {
   const { token } = useAuth();
 
   return (
-    <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white">
+    <div className="bg-white">
+      {/* Hero Carousel */}
       <BannerCarousel />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24">
-        <div className="text-center animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-white drop-shadow-lg">
-            Welcome to Our Restaurant
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-gray-100 px-4 animate-slide-up">
-            Experience the finest dining with our delicious menu and excellent service
+
+      {/* About Us Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">About Us</h2>
+          <p className="text-gray-600 text-lg max-w-3xl mx-auto">
+            Welcome to our restaurant. We offer a wide variety of delicious dishes prepared with fresh ingredients. Our team is dedicated to providing you with an exceptional dining experience.
           </p>
-          
-          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-4 animate-slide-up-delay">
-            <Link
-              to={ROUTE_PATHS.MENU}
-              className="px-6 py-3 sm:px-8 bg-white text-indigo-600 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl text-center backdrop-blur-sm"
-            >
-              View Menu →
-            </Link>
-            {token ? (
-              <Link
-                to={ROUTE_PATHS.BOOK_TABLE}
-                className="px-6 py-3 sm:px-8 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl text-center"
-              >
-                Book a Table
-              </Link>
-            ) : (
-              <Link
-                to={ROUTE_PATHS.SIGNUP}
-                className="px-6 py-3 sm:px-8 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl text-center"
-              >
-                Get Started
-              </Link>
-            )}
-          </div>
         </div>
 
-        <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 px-4">
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <Link
             to={ROUTE_PATHS.MENU}
-            className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-lg hover:shadow-2xl group cursor-pointer"
+            className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center group"
           >
-            <div className="text-4xl sm:text-5xl mb-3 sm:mb-4 transform group-hover:scale-110 transition-transform duration-300">🍕</div>
-            <h3 className="text-lg sm:text-xl font-semibold mb-2">Delicious Food</h3>
-            <p className="text-sm sm:text-base text-gray-100">
-              Wide variety of mouth-watering dishes from Italian to Asian cuisine
+            <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">🍕</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Menu</h3>
+            <p className="text-gray-600">
+              Explore our diverse menu options
             </p>
           </Link>
-          
+
           <Link
-            to={ROUTE_PATHS.BOOK_TABLE}
-            className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-lg hover:shadow-2xl group cursor-pointer"
+            to="/gallery"
+            className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center group"
           >
-            <div className="text-4xl sm:text-5xl mb-3 sm:mb-4 transform group-hover:scale-110 transition-transform duration-300">🎯</div>
-            <h3 className="text-lg sm:text-xl font-semibold mb-2">Easy Booking</h3>
-            <p className="text-sm sm:text-base text-gray-100">
-              Book your table online in just a few clicks
+            <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">📸</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Gallery</h3>
+            <p className="text-gray-600">
+              View our collection of mouth-watering dishes and vibrant atmosphere
             </p>
           </Link>
-          
+
+          <Link
+            to="/about"
+            className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center group"
+          >
+            <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">📖</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Our Story</h3>
+            <p className="text-gray-600">
+              Learn more about our story and values
+            </p>
+          </Link>
+
+          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-center group">
+            <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">🎉</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Catering Services</h3>
+            <p className="text-gray-600">
+              We can provide catering for Weddings, Corporate and Private events
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Our Story Section */}
+      <div className="bg-gray-50 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Story</h2>
+              <p className="text-gray-600 text-lg mb-4">
+                Our team is dedicated to providing you with an exceptional dining experience. We believe in using only the freshest ingredients and traditional cooking methods to bring you authentic flavors.
+              </p>
+              <p className="text-gray-600 text-lg mb-6">
+                Since our opening, we have been committed to creating memorable moments for our guests through exceptional food, warm hospitality, and a welcoming atmosphere.
+              </p>
+              <Link
+                to="/about"
+                className="inline-block px-6 py-3 text-white font-semibold rounded-lg transition-all duration-300"
+                style={{ backgroundColor: '#122d4b' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
+              >
+                Learn More
+              </Link>
+            </div>
+            <div className="relative">
+              <div className="aspect-w-16 aspect-h-12 rounded-lg overflow-hidden shadow-2xl">
+                <div className="w-full h-96 bg-gradient-to-br from-orange-200 to-orange-400 flex items-center justify-center">
+                  <span className="text-8xl">🍽️</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Catering Services Section */}
+      <div className="bg-gradient-to-r from-orange-50 to-orange-100 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="text-5xl mb-6">🎉</div>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Catering Services</h2>
+          <p className="text-gray-700 text-lg mb-8 max-w-2xl mx-auto">
+            We can provide catering for Weddings, Corporate and Private events. Let us make your special occasion unforgettable with our delicious food and professional service.
+          </p>
           <Link
             to={ROUTE_PATHS.CONTACT}
-            className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 sm:col-span-2 lg:col-span-1 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-lg hover:shadow-2xl group cursor-pointer"
+            className="inline-block px-8 py-3 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105"
+            style={{ backgroundColor: '#122d4b' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
           >
-            <div className="text-4xl sm:text-5xl mb-3 sm:mb-4 transform group-hover:scale-110 transition-transform duration-300">⭐</div>
-            <h3 className="text-lg sm:text-xl font-semibold mb-2">Great Service</h3>
-            <p className="text-sm sm:text-base text-gray-100">
-              Dedicated staff committed to making your dining experience perfect
-            </p>
+            Contact Us for Catering
           </Link>
         </div>
       </div>

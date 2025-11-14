@@ -35,16 +35,11 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 sm:p-10 border border-white/50 animate-fade-in">
+        <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-10 animate-fade-in">
           <div className="text-center mb-8 animate-fade-in">
-            <div className="flex justify-center mb-6">
-              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-4 rounded-full animate-pulse">
-                <span className="text-5xl">📧</span>
-              </div>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
               Contact Us
             </h2>
             <p className="text-gray-600 text-lg">
@@ -64,7 +59,7 @@ const Contact = () => {
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300"
                 placeholder="Your name"
               />
             </div>
@@ -80,7 +75,7 @@ const Contact = () => {
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300"
                 placeholder="Your contact number"
               />
             </div>
@@ -95,7 +90,7 @@ const Contact = () => {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300"
                 placeholder="your.email@example.com"
               />
             </div>
@@ -110,14 +105,14 @@ const Contact = () => {
                 rows="6"
                 value={formData.message}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 resize-none"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-300 resize-none"
                 placeholder="Tell us more about your inquiry..."
               ></textarea>
             </div>
 
             {/* Error and Success Messages near button */}
             {error && (
-              <div className="bg-red-50 border-2 border-red-300 text-red-700 px-4 py-3 rounded-xl animate-slide-down shadow-md flex items-center gap-2">
+              <div className="bg-red-50 border-2 border-red-300 text-red-700 px-4 py-3 rounded-lg animate-slide-down shadow-md flex items-center gap-2">
                 <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -126,7 +121,7 @@ const Contact = () => {
             )}
 
             {success && (
-              <div className="bg-green-50 border-2 border-green-300 text-green-700 px-4 py-3 rounded-xl animate-slide-down shadow-md flex items-center gap-2">
+              <div className="bg-green-50 border-2 border-green-300 text-green-700 px-4 py-3 rounded-lg animate-slide-down shadow-md flex items-center gap-2">
                 <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -138,7 +133,10 @@ const Contact = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-6 border border-transparent rounded-xl shadow-lg text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 hover:from-indigo-700 hover:via-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                className="w-full py-3 px-6 border border-transparent rounded-lg shadow-lg text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                style={{ backgroundColor: '#122d4b' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
               >
                 {loading ? (
                   <span className="flex items-center justify-center">

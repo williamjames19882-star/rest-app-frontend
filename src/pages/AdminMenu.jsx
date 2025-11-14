@@ -184,14 +184,17 @@ const AdminMenu = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-8 animate-fade-in">
           <div>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold" style={{ color: '#122d4b' }}>
               Manage Menu
             </h2>
             <p className="text-gray-600 mt-2">Add, edit, or delete menu items</p>
           </div>
           <button
             onClick={() => setIsFormOpen(true)}
-            className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+            className="px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+            style={{ backgroundColor: '#122d4b' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
           >
             + Add Item
           </button>
@@ -203,9 +206,12 @@ const AdminMenu = () => {
             onClick={() => setSelectedCategory('')}
             className={`px-4 py-2 rounded-full font-medium transition-all duration-300 transform hover:scale-105 whitespace-nowrap ${
               selectedCategory === ''
-                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
+            style={selectedCategory === '' ? { backgroundColor: '#122d4b' } : {}}
+            onMouseEnter={(e) => selectedCategory === '' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+            onMouseLeave={(e) => selectedCategory === '' && (e.currentTarget.style.backgroundColor = '#122d4b')}
           >
             All
           </button>
@@ -215,9 +221,12 @@ const AdminMenu = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-4 py-2 rounded-full font-medium transition-all duration-300 transform hover:scale-105 whitespace-nowrap ${
                 selectedCategory === category
-                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                  ? 'text-white shadow-lg'
                   : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
               }`}
+              style={selectedCategory === category ? { backgroundColor: '#122d4b' } : {}}
+              onMouseEnter={(e) => selectedCategory === category && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+              onMouseLeave={(e) => selectedCategory === category && (e.currentTarget.style.backgroundColor = '#122d4b')}
             >
               {category}
             </button>
@@ -241,7 +250,7 @@ const AdminMenu = () => {
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
             <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-slide-up">
               <div className="p-6">
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">
+                <h3 className="text-2xl font-bold mb-6" style={{ color: '#122d4b' }}>
                   {editingItem ? 'Edit Menu Item' : 'Add Menu Item'}
                 </h3>
 
@@ -383,7 +392,10 @@ const AdminMenu = () => {
                     <button
                       type="submit"
                       disabled={saving}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      className="flex-1 px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      style={{ backgroundColor: '#122d4b' }}
+                      onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
+                      onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#122d4b')}
                     >
                       {saving ? (
                         <span className="flex items-center justify-center">
@@ -443,18 +455,21 @@ const AdminMenu = () => {
                     <h3 className="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">
                       {item.name}
                     </h3>
-                    <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    <span className="text-xl font-bold" style={{ color: '#122d4b' }}>
                       {formatPrice(item.price)}
                     </span>
                   </div>
                   <p className="text-gray-600 text-sm mb-3 line-clamp-2">{item.description}</p>
-                  <span className="inline-block bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+                  <span className="inline-block text-xs font-semibold px-3 py-1.5 rounded-full mb-4" style={{ backgroundColor: '#e8f0f8', color: '#122d4b' }}>
                     {item.category}
                   </span>
                   <div className="flex gap-2 mt-auto">
                     <button
                       onClick={() => handleEdit(item)}
-                      className="flex-1 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 font-semibold"
+                      className="flex-1 px-4 py-2 text-white rounded-lg transition-all duration-300 font-semibold"
+                      style={{ backgroundColor: '#122d4b' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
                     >
                       Edit
                     </button>

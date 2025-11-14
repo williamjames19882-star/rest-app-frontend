@@ -68,7 +68,10 @@ const MyReservations = () => {
             <p className="text-gray-600 text-lg mb-4">You have no reservations yet.</p>
             <a
               href="/book-table"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg font-semibold"
+              className="inline-block px-6 py-3 text-white rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg font-semibold"
+              style={{ backgroundColor: '#122d4b' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
             >
               Book a Table
             </a>
@@ -110,6 +113,16 @@ const MyReservations = () => {
                       <p>
                         <span className="font-medium">Capacity:</span> {reservation.capacity} seats
                       </p>
+                      {reservation.mobile_number && (
+                        <p>
+                          <span className="font-medium">Mobile:</span> <a href={`tel:${reservation.mobile_number}`} className="text-indigo-600 hover:underline">{reservation.mobile_number}</a>
+                        </p>
+                      )}
+                      {reservation.email && (
+                        <p>
+                          <span className="font-medium">Email:</span> <a href={`mailto:${reservation.email}`} className="text-indigo-600 hover:underline break-all">{reservation.email}</a>
+                        </p>
+                      )}
                       {reservation.special_requests && (
                         <p>
                           <span className="font-medium">Requests:</span> {reservation.special_requests}
