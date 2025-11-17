@@ -336,11 +336,11 @@ const Navbar = () => {
                 )}
             
             {/* Authenticated navigation */}
-            {token && !isAdmin && navigationItems.authenticated.map((item) => (
+            {token && navigationItems.authenticated.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-100 transition-all duration-300"
+                className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-gray-800 transition-all duration-300"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.label}
