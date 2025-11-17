@@ -88,7 +88,7 @@ const MyReservations = () => {
                   <div className="mb-4 md:mb-0">
                     <div className="flex items-center mb-2">
                     <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                      Table {reservation.table_number}
+                      Reservation #{reservation.id}
                     </h3>
                     <span
                       className={`ml-3 px-3 py-1 text-xs font-semibold rounded-full ${
@@ -109,9 +109,6 @@ const MyReservations = () => {
                       </p>
                       <p>
                         <span className="font-medium">Guests:</span> {reservation.number_of_guests}
-                      </p>
-                      <p>
-                        <span className="font-medium">Capacity:</span> {reservation.capacity} seats
                       </p>
                       {reservation.mobile_number && (
                         <p>

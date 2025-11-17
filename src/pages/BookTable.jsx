@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { reservationsAPI } from '../api/api';
 import { useNavigate } from 'react-router-dom';
+import { getOpeningHours, isWithinOpeningHours, getTimeConstraints, formatOpeningHours } from '../utils/openingHours';
 
 const BookTable = () => {
   const [formData, setFormData] = useState({
@@ -11,24 +12,31 @@ const BookTable = () => {
     email: '',
     special_requests: ''
   });
-  const [availableTables, setAvailableTables] = useState([]);
-  const [selectedTable, setSelectedTable] = useState('');
   const [loading, setLoading] = useState(false);
-  const [checkingTables, setCheckingTables] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [timeConstraints, setTimeConstraints] = useState({ min: '12:00', max: '23:59' });
   const navigate = useNavigate();
 
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
     setFormData(prev => ({ ...prev, date: today }));
+    // Set initial time constraints
+    const todayDate = new Date();
+    setTimeConstraints(getTimeConstraints(todayDate));
   }, []);
 
   useEffect(() => {
-    if (formData.date && formData.time) {
-      checkAvailableTables();
+    // Update time constraints when date changes
+    if (formData.date) {
+      const selectedDate = new Date(formData.date);
+      setTimeConstraints(getTimeConstraints(selectedDate));
+      // Reset time if it's outside new opening hours
+      if (formData.time && !isWithinOpeningHours(selectedDate, formData.time)) {
+        setFormData(prev => ({ ...prev, time: '' }));
+      }
     }
-  }, [formData.date, formData.time]);
+  }, [formData.date]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,24 +44,6 @@ const BookTable = () => {
       ...formData,
       [name]: value
     });
-    if (name === 'date' || name === 'time') {
-      setSelectedTable('');
-      setAvailableTables([]);
-    }
-  };
-
-  const checkAvailableTables = async () => {
-    if (!formData.date || !formData.time) return;
-    
-    setCheckingTables(true);
-    try {
-      const response = await reservationsAPI.getAvailableTables(formData.date, formData.time);
-      setAvailableTables(response.data);
-    } catch (err) {
-      console.error('Error checking available tables:', err);
-    } finally {
-      setCheckingTables(false);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -61,34 +51,25 @@ const BookTable = () => {
     setError('');
     setSuccess('');
 
-    if (!selectedTable) {
-      setError('Please select a table');
+    if (!formData.date || !formData.time || !formData.number_of_guests || !formData.mobile_number) {
+      setError('Please fill in all required fields');
       return;
     }
 
-    if (!formData.date || !formData.time || !formData.number_of_guests || !formData.mobile_number) {
-      setError('Please fill in all required fields');
+    // Validate time is within opening hours
+    const selectedDate = new Date(formData.date);
+    if (!isWithinOpeningHours(selectedDate, formData.time)) {
+      const hours = getOpeningHours(selectedDate);
+      const openTime12 = formatTime12Hour(hours.openTime);
+      const closeTime12 = formatTime12Hour(hours.closeTime);
+      setError(`Booking time must be within opening hours: ${openTime12} - ${closeTime12}`);
       return;
     }
 
     setLoading(true);
 
     try {
-      // Final availability check before booking
-      try {
-        const latest = await reservationsAPI.getAvailableTables(formData.date, formData.time);
-        const stillAvailable = (latest.data || []).some(t => t.id === selectedTable);
-        if (!stillAvailable) {
-          setError('Selected table is no longer available. Please choose another table.');
-          setLoading(false);
-          return;
-        }
-      } catch (_) {
-        // If the availability check fails, continue to server which will enforce
-      }
-
       await reservationsAPI.createReservation({
-        table_id: selectedTable,
         date: formData.date,
         time: formData.time,
         number_of_guests: parseInt(formData.number_of_guests),
@@ -97,15 +78,15 @@ const BookTable = () => {
         special_requests: formData.special_requests
       });
 
-      setSuccess('Table booked successfully!');
+      setSuccess('Reservation booked successfully!');
       setTimeout(() => {
         navigate('/');
       }, 2000);
     } catch (err) {
       if (err.response?.status === 409) {
-        setError('This table is already booked for the selected date and time.');
+        setError('No tables available for the selected date and time. Please try a different time.');
       } else {
-        setError(err.response?.data?.error || 'Failed to book table. Please try again.');
+        setError(err.response?.data?.error || 'Failed to book reservation. Please try again.');
       }
     } finally {
       setLoading(false);
@@ -150,10 +131,17 @@ const BookTable = () => {
                   name="time"
                   type="time"
                   required
+                  min={timeConstraints.min}
+                  max={timeConstraints.max}
                   value={formData.time}
                   onChange={handleChange}
                   className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
                 />
+                {formData.date && (
+                  <p className="text-xs text-red-500 mt-1">
+                    Opening hours: {formatOpeningHours(new Date(formData.date))}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -221,45 +209,6 @@ const BookTable = () => {
               ></textarea>
             </div>
 
-            {/* Available Tables */}
-            {formData.date && formData.time && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Select a Table *
-                </label>
-                {checkingTables ? (
-                  <div className="text-center py-4">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#122d4b' }}></div>
-                    <p className="mt-2 text-gray-600">Checking available tables...</p>
-                  </div>
-                ) : availableTables.length === 0 ? (
-                  <p className="text-red-600">No tables available for this date and time.</p>
-                ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 px-1">
-                    {availableTables.map((table) => (
-                      <button
-                        key={table.id}
-                        type="button"
-                        onClick={() => setSelectedTable(table.id)}
-                        className={`p-4 border-2 rounded-xl transition-all duration-300 transform sm:hover:scale-105 sm:hover:shadow-lg ${
-                          selectedTable === table.id
-                            ? 'sm:scale-105 shadow-lg'
-                            : 'border-gray-300 bg-white'
-                        }`}
-                        style={selectedTable === table.id ? { borderColor: '#122d4b', backgroundColor: '#f0f4f8' } : {}}
-                        onMouseEnter={(e) => selectedTable !== table.id && (e.currentTarget.style.borderColor = '#122d4b')}
-                        onMouseLeave={(e) => selectedTable !== table.id && (e.currentTarget.style.borderColor = '#d1d5db')}
-                      >
-                        <div className="font-bold text-lg" style={{ color: selectedTable === table.id ? '#122d4b' : '#122d4b' }}>{table.table_number}</div>
-                        <div className="text-sm text-gray-600 font-medium">Capacity: {table.capacity}</div>
-                        <div className="text-sm text-gray-500">{table.location}</div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Error and Success Messages near button */}
             {error && (
               <div className="bg-red-50 border-2 border-red-300 text-red-700 px-4 py-3 rounded-xl animate-slide-down shadow-md flex items-center gap-2">
@@ -282,7 +231,7 @@ const BookTable = () => {
             <div>
               <button
                 type="submit"
-                disabled={loading || !selectedTable}
+                disabled={loading}
                 className="w-full py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
                 style={{ backgroundColor: '#122d4b' }}
                 onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
@@ -304,6 +253,14 @@ const BookTable = () => {
       </div>
     </div>
   );
+};
+
+// Helper function to format time for display
+const formatTime12Hour = (time24) => {
+  const [hours, minutes] = time24.split(':').map(Number);
+  const period = hours >= 12 ? 'pm' : 'am';
+  const hours12 = hours % 12 || 12;
+  return `${hours12}:${minutes.toString().padStart(2, '0')}${period}`;
 };
 
 export default BookTable;

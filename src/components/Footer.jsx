@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="text-gray-300" style={{ backgroundColor: '#122d4b' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Logo and Description */}
           <div>
             <Link to={ROUTE_PATHS.HOME} className="flex items-center gap-2 mb-4">
@@ -100,6 +100,33 @@ const Footer = () => {
                 </a>
               </div>
             </div>
+          </div>
+
+          {/* Google Map */}
+          <div>
+            <h3 className="text-white text-lg font-semibold mb-4">Find Us</h3>
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=7+Cannon+Street+BS3+1BH+Bristol+UK"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-lg overflow-hidden border-2 border-gray-700 hover:border-gray-500 transition-all duration-300 transform hover:scale-105 cursor-pointer relative"
+              aria-label="Open location in Google Maps"
+            >
+              <div className="absolute inset-0 z-10" aria-hidden="true"></div>
+              <iframe
+                src="https://www.google.com/maps?q=7+Cannon+Street+BS3+1BH+Bristol+UK&output=embed"
+                width="100%"
+                height="200"
+                style={{ border: 0, pointerEvents: 'none' }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Spice and Sizzle Location"
+              ></iframe>
+            </a>
+            <p className="text-gray-400 text-xs mt-2 text-center">
+              Click map to open in Google Maps
+            </p>
           </div>
         </div>
 

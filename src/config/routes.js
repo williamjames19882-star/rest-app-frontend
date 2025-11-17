@@ -8,7 +8,6 @@ import AdminDashboard from '../pages/AdminDashboard';
 import AdminReservations from '../pages/AdminReservations';
 import AdminMenu from '../pages/AdminMenu';
 import AdminUsers from '../pages/AdminUsers';
-import AdminTables from '../pages/AdminTables';
 import AdminBanners from '../pages/AdminBanners';
 import AdminTransactions from '../pages/AdminTransactions';
 import Contact from '../pages/Contact';
@@ -106,11 +105,6 @@ export const routes = {
       exact: true,
     },
     {
-      path: '/admin/tables',
-      element: <AdminTables />,
-      exact: true,
-    },
-    {
       path: '/admin/banners',
       element: <AdminBanners />,
       exact: true,
@@ -153,7 +147,6 @@ export const ROUTE_PATHS = {
   ADMIN_RESERVATIONS: '/admin/reservations',
   ADMIN_MENU: '/admin/menu',
   ADMIN_USERS: '/admin/users',
-  ADMIN_TABLES: '/admin/tables',
   ADMIN_BANNERS: '/admin/banners',
   ADMIN_CONTACT_REQUESTS: '/admin/contact-requests',
   ADMIN_TRANSACTIONS: '/admin/transactions',

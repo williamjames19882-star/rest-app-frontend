@@ -33,8 +33,6 @@ export const menuAPI = {
 
 // Reservations API
 export const reservationsAPI = {
-  getAvailableTables: (date, time) => 
-    api.get('/reservations/tables/available', { params: { date, time } }),
   createReservation: (reservationData) => 
     api.post('/reservations', reservationData),
   getMyReservations: () => 
@@ -59,11 +57,6 @@ export const adminAPI = {
   }),
   deleteMenuItem: (id) => api.delete(`/admin/menu/items/${id}`),
   updateReservationStatus: (id, status) => api.put(`/admin/reservations/${id}/status`, { status }),
-  // Table management
-  getAllTables: () => api.get('/admin/tables'),
-  createTable: (tableData) => api.post('/admin/tables', tableData),
-  updateTable: (id, tableData) => api.put(`/admin/tables/${id}`, tableData),
-  deleteTable: (id) => api.delete(`/admin/tables/${id}`),
   // Contact requests
   getAllContactRequests: (params) => api.get('/admin/contact-requests', { params }),
   updateContactRequestStatus: (id, status) => api.put(`/admin/contact-requests/${id}/status`, { status }),

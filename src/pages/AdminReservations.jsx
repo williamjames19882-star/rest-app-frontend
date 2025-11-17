@@ -54,9 +54,7 @@ const AdminReservations = () => {
         res.id === id ? { ...res, status: newStatus } : res
       ));
     } catch (err) {
-      const msg = err.response?.status === 409
-        ? 'Cannot confirm: table is already booked for that slot.'
-        : (err.response?.data?.error || 'Failed to update reservation status.');
+      const msg = err.response?.data?.error || 'Failed to update reservation status.';
       alert(msg);
     }
   };
@@ -159,7 +157,7 @@ const AdminReservations = () => {
                   <div className="flex-1">
                     <div className="flex items-center mb-3 flex-wrap gap-2">
                       <h3 className="text-xl font-bold" style={{ color: '#122d4b' }}>
-                        Table {reservation.table_number}
+                        Reservation #{reservation.id}
                       </h3>
                       <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
                         reservation.status === 'confirmed'

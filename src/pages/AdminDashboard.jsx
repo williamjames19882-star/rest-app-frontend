@@ -153,17 +153,6 @@ const AdminDashboard = () => {
                   <p className="text-sm text-gray-600">Add/edit items</p>
                 </Link>
                 <Link 
-                  to={ROUTE_PATHS.ADMIN_TABLES}
-                  className="p-6 border-2 border-gray-300 rounded-2xl transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
-                  style={{ borderColor: 'inherit' }}
-                  onMouseEnter={(e) => e.currentTarget.style.borderColor = '#122d4b'}
-                  onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
-                >
-                  <div className="text-5xl mb-3 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">🪑</div>
-                  <h4 className="font-bold text-gray-900">Tables</h4>
-                  <p className="text-sm text-gray-600">Manage tables</p>
-                </Link>
-                <Link 
                   to={ROUTE_PATHS.ADMIN_CONTACT_REQUESTS}
                   className="p-6 border-2 border-gray-300 rounded-2xl transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg group bg-gradient-to-br from-gray-50 to-white"
                   style={{ borderColor: 'inherit' }}
