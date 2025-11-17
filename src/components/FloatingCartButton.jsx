@@ -11,7 +11,7 @@ const FloatingCartButton = () => {
   const cartCount = getCartItemsCount();
 
   // Only show for non-admin users and if there are items in cart
-  if (isAdmin || cartCount === 0) return null;
+  if (cartCount === 0) return null;
 
   const handleClick = () => {
     navigate(ROUTE_PATHS.CART);
