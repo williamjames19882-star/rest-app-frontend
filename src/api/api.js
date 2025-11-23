@@ -67,6 +67,8 @@ export const adminAPI = {
   deleteBanner: (id) => api.delete(`/admin/banners/${id}`),
   // Transactions
   getAllTransactions: (params) => api.get('/admin/transactions', { params }),
+  updateTransactionStatus: (id, status) => api.put(`/admin/transactions/${id}/status`, { status }),
+  updateOrderStatus: (id, order_status) => api.put(`/admin/transactions/${id}/order-status`, { order_status }),
 };
 
 // Public banners API
@@ -79,6 +81,16 @@ export const transactionsAPI = {
   createTransaction: (transactionData) => api.post('/transactions', transactionData),
   getMyTransactions: () => api.get('/transactions/my-transactions'),
   getTransaction: (id) => api.get(`/transactions/${id}`),
+};
+
+// Addresses API
+export const addressesAPI = {
+  getAddresses: () => api.get('/addresses'),
+  getAddress: (id) => api.get(`/addresses/${id}`),
+  createAddress: (addressData) => api.post('/addresses', addressData),
+  updateAddress: (id, addressData) => api.put(`/addresses/${id}`, addressData),
+  deleteAddress: (id) => api.delete(`/addresses/${id}`),
+  setDefaultAddress: (id) => api.patch(`/addresses/${id}/set-default`),
 };
 
 export default api;

@@ -84,9 +84,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange, pageSize, total, on
                       ? 'text-white'
                       : 'hover:bg-gray-100'
                   }`}
-                  style={currentPage === page ? { backgroundColor: '#122d4b', borderColor: '#122d4b' } : {}}
-                  onMouseEnter={(e) => currentPage === page && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-                  onMouseLeave={(e) => currentPage === page && (e.currentTarget.style.backgroundColor = '#122d4b')}
+                  style={currentPage === page ? { backgroundColor: '#000000', borderColor: '#d4af37' } : {}}
+                  onMouseEnter={(e) => currentPage === page && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+                  onMouseLeave={(e) => currentPage === page && (e.currentTarget.style.backgroundColor = '#000000')}
                 >
                   {page}
                 </button>

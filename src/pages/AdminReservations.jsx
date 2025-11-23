@@ -80,7 +80,7 @@ const AdminReservations = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 animate-fade-in">
-          <h2 className="text-3xl font-bold" style={{ color: '#122d4b' }}>
+          <h2 className="text-3xl font-bold" style={{ color: '#000000' }}>
             All Reservations
           </h2>
           <p className="text-gray-600 mt-2">Manage all restaurant reservations</p>
@@ -95,9 +95,9 @@ const AdminReservations = () => {
                 ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
-            style={filterStatus === 'all' ? { backgroundColor: '#122d4b' } : {}}
-            onMouseEnter={(e) => filterStatus === 'all' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-            onMouseLeave={(e) => filterStatus === 'all' && (e.currentTarget.style.backgroundColor = '#122d4b')}
+            style={filterStatus === 'all' ? { backgroundColor: '#000000' } : {}}
+            onMouseEnter={(e) => filterStatus === 'all' && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+            onMouseLeave={(e) => filterStatus === 'all' && (e.currentTarget.style.backgroundColor = '#000000')}
           >
             All ({pagination.total})
           </button>
@@ -108,9 +108,9 @@ const AdminReservations = () => {
                 ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
-            style={filterStatus === 'confirmed' ? { backgroundColor: '#122d4b' } : {}}
-            onMouseEnter={(e) => filterStatus === 'confirmed' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-            onMouseLeave={(e) => filterStatus === 'confirmed' && (e.currentTarget.style.backgroundColor = '#122d4b')}
+            style={filterStatus === 'confirmed' ? { backgroundColor: '#000000' } : {}}
+            onMouseEnter={(e) => filterStatus === 'confirmed' && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+            onMouseLeave={(e) => filterStatus === 'confirmed' && (e.currentTarget.style.backgroundColor = '#000000')}
           >
             Confirmed ({reservations.filter(r => r.status === 'confirmed').length})
           </button>
@@ -121,9 +121,9 @@ const AdminReservations = () => {
                 ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
-            style={filterStatus === 'pending' ? { backgroundColor: '#122d4b' } : {}}
-            onMouseEnter={(e) => filterStatus === 'pending' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-            onMouseLeave={(e) => filterStatus === 'pending' && (e.currentTarget.style.backgroundColor = '#122d4b')}
+            style={filterStatus === 'pending' ? { backgroundColor: '#000000' } : {}}
+            onMouseEnter={(e) => filterStatus === 'pending' && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+            onMouseLeave={(e) => filterStatus === 'pending' && (e.currentTarget.style.backgroundColor = '#000000')}
           >
             Pending ({reservations.filter(r => r.status === 'pending').length})
           </button>
@@ -137,7 +137,7 @@ const AdminReservations = () => {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#122d4b' }}></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#000000' }}></div>
             <p className="mt-4 text-gray-600">Loading reservations...</p>
           </div>
         ) : filteredReservations.length === 0 ? (
@@ -156,7 +156,7 @@ const AdminReservations = () => {
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center mb-3 flex-wrap gap-2">
-                      <h3 className="text-xl font-bold" style={{ color: '#122d4b' }}>
+                      <h3 className="text-xl font-bold" style={{ color: '#000000' }}>
                         Reservation #{reservation.id}
                       </h3>
                       <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
@@ -175,10 +175,10 @@ const AdminReservations = () => {
                       <p><span className="font-medium">Time:</span> {formatTime(reservation.time)}</p>
                       <p><span className="font-medium">Guests:</span> {reservation.number_of_guests}</p>
                       {reservation.phone && (
-                        <p><span className="font-medium">Mobile:</span> <a href={`tel:${reservation.phone}`} className="hover:underline" style={{ color: '#122d4b' }}>{reservation.phone}</a></p>
+                        <p><span className="font-medium">Mobile:</span> <a href={`tel:${reservation.phone}`} className="hover:underline" style={{ color: '#000000' }}>{reservation.phone}</a></p>
                       )}
                       {reservation.email && (
-                        <p><span className="font-medium">Email:</span> <a href={`mailto:${reservation.email}`} className="hover:underline break-all" style={{ color: '#122d4b' }}>{reservation.email}</a></p>
+                        <p><span className="font-medium">Email:</span> <a href={`mailto:${reservation.email}`} className="hover:underline break-all" style={{ color: '#000000' }}>{reservation.email}</a></p>
                       )}
                       {reservation.special_requests && (
                         <p className="text-sm italic col-span-full">

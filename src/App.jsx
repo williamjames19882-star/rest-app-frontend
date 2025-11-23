@@ -28,10 +28,10 @@ function App() {
         <HolidayPromoProvider>
           <Router>
             <ScrollToTop />
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-white">
               <HolidayPromoPopup />
               <Navbar />
-              <FloatingCartButton />
+              {/* <FloatingCartButton /> */}
           <Routes>
             {/* Public routes */}
             {routes.public.map((route) => (

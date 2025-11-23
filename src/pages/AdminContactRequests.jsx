@@ -119,7 +119,7 @@ const AdminContactRequests = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 animate-fade-in">
-          <h2 className="text-3xl font-bold" style={{ color: '#122d4b' }}>
+          <h2 className="text-3xl font-bold" style={{ color: '#000000' }}>
             Contact Requests
           </h2>
           <p className="text-gray-600 mt-2">View and manage customer inquiries</p>
@@ -134,9 +134,9 @@ const AdminContactRequests = () => {
                 ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
-            style={filterStatus === 'all' ? { backgroundColor: '#122d4b' } : {}}
-            onMouseEnter={(e) => filterStatus === 'all' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-            onMouseLeave={(e) => filterStatus === 'all' && (e.currentTarget.style.backgroundColor = '#122d4b')}
+            style={filterStatus === 'all' ? { backgroundColor: '#000000' } : {}}
+            onMouseEnter={(e) => filterStatus === 'all' && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+            onMouseLeave={(e) => filterStatus === 'all' && (e.currentTarget.style.backgroundColor = '#000000')}
           >
             All ({pagination.total})
           </button>
@@ -147,9 +147,9 @@ const AdminContactRequests = () => {
                 ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
-            style={filterStatus === 'new' ? { backgroundColor: '#122d4b' } : {}}
-            onMouseEnter={(e) => filterStatus === 'new' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-            onMouseLeave={(e) => filterStatus === 'new' && (e.currentTarget.style.backgroundColor = '#122d4b')}
+            style={filterStatus === 'new' ? { backgroundColor: '#000000' } : {}}
+            onMouseEnter={(e) => filterStatus === 'new' && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+            onMouseLeave={(e) => filterStatus === 'new' && (e.currentTarget.style.backgroundColor = '#000000')}
           >
             New ({requests.filter(r => r.status === 'new').length})
           </button>
@@ -160,9 +160,9 @@ const AdminContactRequests = () => {
                 ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
-            style={filterStatus === 'read' ? { backgroundColor: '#122d4b' } : {}}
-            onMouseEnter={(e) => filterStatus === 'read' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-            onMouseLeave={(e) => filterStatus === 'read' && (e.currentTarget.style.backgroundColor = '#122d4b')}
+            style={filterStatus === 'read' ? { backgroundColor: '#000000' } : {}}
+            onMouseEnter={(e) => filterStatus === 'read' && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+            onMouseLeave={(e) => filterStatus === 'read' && (e.currentTarget.style.backgroundColor = '#000000')}
           >
             Read ({requests.filter(r => r.status === 'read').length})
           </button>
@@ -173,9 +173,9 @@ const AdminContactRequests = () => {
                 ? 'text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
             }`}
-            style={filterStatus === 'responded' ? { backgroundColor: '#122d4b' } : {}}
-            onMouseEnter={(e) => filterStatus === 'responded' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-            onMouseLeave={(e) => filterStatus === 'responded' && (e.currentTarget.style.backgroundColor = '#122d4b')}
+            style={filterStatus === 'responded' ? { backgroundColor: '#000000' } : {}}
+            onMouseEnter={(e) => filterStatus === 'responded' && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+            onMouseLeave={(e) => filterStatus === 'responded' && (e.currentTarget.style.backgroundColor = '#000000')}
           >
             Responded ({requests.filter(r => r.status === 'responded').length})
           </button>
@@ -189,7 +189,7 @@ const AdminContactRequests = () => {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#122d4b' }}></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#000000' }}></div>
             <p className="mt-4 text-gray-600">Loading requests...</p>
           </div>
         ) : filteredRequests.length === 0 ? (
@@ -209,7 +209,7 @@ const AdminContactRequests = () => {
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center mb-2 flex-wrap gap-2">
-                      <h3 className="text-xl font-bold" style={{ color: '#122d4b' }}>
+                      <h3 className="text-xl font-bold" style={{ color: '#000000' }}>
                         {request.name}
                       </h3>
                       <span className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(request.status)}`}>
@@ -226,7 +226,7 @@ const AdminContactRequests = () => {
                     </div>
                   </div>
                   <div className="flex items-center">
-                    <svg className="h-5 w-5 text-gray-400 transition-colors" style={{ color: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.color = '#122d4b'} onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-5 w-5 text-gray-400 transition-colors" style={{ color: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.color = '#000000'} onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
@@ -259,7 +259,7 @@ const AdminContactRequests = () => {
             >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold" style={{ color: '#122d4b' }}>
+                  <h3 className="text-2xl font-bold" style={{ color: '#000000' }}>
                     Contact Request Details
                   </h3>
                   <button
@@ -285,9 +285,9 @@ const AdminContactRequests = () => {
                       <button
                         onClick={() => handleStatusChange(selectedRequest.id, 'responded')}
                         className="px-6 py-2 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-                        style={{ backgroundColor: '#122d4b' }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
+                        style={{ backgroundColor: '#000000' }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#000000'}
                       >
                         Mark as Responded
                       </button>
@@ -343,9 +343,9 @@ const AdminContactRequests = () => {
                   <button
                     onClick={handleCloseModal}
                     className="px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-                    style={{ backgroundColor: '#122d4b' }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
+                    style={{ backgroundColor: '#000000' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#000000'}
                   >
                     Close
                   </button>

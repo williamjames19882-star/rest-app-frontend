@@ -39,34 +39,29 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-white/50 animate-fade-in">
+    <div className="min-h-screen bg-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+      <div className="max-w-md w-full space-y-8 bg-white p-8 sm:p-10 rounded-lg shadow-lg border-4" style={{ borderColor: '#ddb73c' }}>
         <div>
-          <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-full animate-pulse">
-              <span className="text-4xl">🎉</span>
-            </div>
-          </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-center text-3xl font-bold mb-2" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm" style={{ color: '#555', fontFamily: "'Libre Baskerville', sans-serif" }}>
             Or{' '}
-            <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors duration-300">
+            <Link to="/login" className="font-medium transition-colors duration-300" style={{ color: '#ddb73c' }} onMouseEnter={(e) => e.currentTarget.style.color = '#d4af37'} onMouseLeave={(e) => e.currentTarget.style.color = '#ddb73c'}>
               sign in to existing account
             </Link>
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+            <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded relative" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
               {error}
             </div>
           )}
           
           <div className="rounded-md shadow-sm space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="block text-sm font-medium" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
                 Full Name
               </label>
               <input
@@ -74,14 +69,26 @@ const Signup = () => {
                 name="name"
                 type="text"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-all duration-300"
+                className="mt-1 appearance-none relative block w-full px-3 py-3 border-2 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-300"
+                style={{ 
+                  borderColor: '#ddd',
+                  fontFamily: "'Libre Baskerville', sans-serif"
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#ddb73c';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(221, 183, 60, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#ddd';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
                 placeholder="John Doe"
                 value={formData.name}
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
                 Email address
               </label>
               <input
@@ -90,14 +97,26 @@ const Signup = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-all duration-300"
+                className="mt-1 appearance-none relative block w-full px-3 py-3 border-2 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-300"
+                style={{ 
+                  borderColor: '#ddd',
+                  fontFamily: "'Libre Baskerville', sans-serif"
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#ddb73c';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(221, 183, 60, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#ddd';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
                 placeholder="john@example.com"
                 value={formData.email}
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="phone" className="block text-sm font-medium" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
                 Phone Number
               </label>
               <input
@@ -105,14 +124,26 @@ const Signup = () => {
                 name="phone"
                 type="tel"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-all duration-300"
+                className="mt-1 appearance-none relative block w-full px-3 py-3 border-2 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-300"
+                style={{ 
+                  borderColor: '#ddd',
+                  fontFamily: "'Libre Baskerville', sans-serif"
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#ddb73c';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(221, 183, 60, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#ddd';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
                 placeholder="123-456-7890"
                 value={formData.phone}
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
                 Password
               </label>
               <input
@@ -121,7 +152,19 @@ const Signup = () => {
                 type="password"
                 autoComplete="new-password"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-all duration-300"
+                className="mt-1 appearance-none relative block w-full px-3 py-3 border-2 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-300"
+                style={{ 
+                  borderColor: '#ddd',
+                  fontFamily: "'Libre Baskerville', sans-serif"
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#ddb73c';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(221, 183, 60, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#ddd';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
@@ -133,10 +176,13 @@ const Signup = () => {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
-              style={{ backgroundColor: '#122d4b' }}
-              onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-              onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#122d4b')}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white focus:outline-none disabled:opacity-50 transition-all duration-300"
+              style={{ 
+                backgroundColor: '#000000',
+                fontFamily: "'Libre Baskerville', sans-serif"
+              }}
+              onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+              onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#000000')}
             >
               {loading ? (
                 <span className="flex items-center">

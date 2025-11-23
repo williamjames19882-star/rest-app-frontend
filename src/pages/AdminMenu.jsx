@@ -15,12 +15,11 @@ const AdminMenu = () => {
     name: '',
     description: '',
     price: '',
-    category: '',
-    image: null,
-    image_url: ''
+    category: ''
   });
   const [isNewCategory, setIsNewCategory] = useState(false);
   const [newCategory, setNewCategory] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchMenu();
@@ -62,10 +61,8 @@ const AdminMenu = () => {
   }, [error]);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === 'image') {
-      setFormData({ ...formData, image: files[0] });
-    } else if (name === 'category') {
+    const { name, value } = e.target;
+    if (name === 'category') {
       if (value === '__NEW__') {
         setIsNewCategory(true);
         setFormData({ ...formData, category: '' });
@@ -94,15 +91,6 @@ const AdminMenu = () => {
       data.append('description', formData.description);
       data.append('price', formData.price);
       data.append('category', formData.category);
-      
-      // If no new image uploaded but editing, keep the existing image
-      if (formData.image) {
-        // New image file uploaded
-        data.append('image', formData.image);
-      } else if (editingItem && formData.image_url) {
-        // No new image but editing - keep existing image URL
-        data.append('image_url', formData.image_url);
-      }
 
       if (editingItem) {
         await adminAPI.updateMenuItem(editingItem.id, data);
@@ -120,7 +108,7 @@ const AdminMenu = () => {
       setTimeout(() => {
         setIsFormOpen(false);
         setEditingItem(null);
-        setFormData({ name: '', description: '', price: '', category: '', image: null, image_url: '' });
+        setFormData({ name: '', description: '', price: '', category: '' });
         setIsNewCategory(false);
         setNewCategory('');
         setSuccess('');
@@ -139,9 +127,7 @@ const AdminMenu = () => {
       name: item.name,
       description: item.description || '',
       price: item.price,
-      category: item.category,
-      image: null,
-      image_url: item.image_url || ''
+      category: item.category
     });
     setIsNewCategory(false);
     setNewCategory('');
@@ -167,7 +153,7 @@ const AdminMenu = () => {
   const handleCancel = () => {
     setIsFormOpen(false);
     setEditingItem(null);
-    setFormData({ name: '', description: '', price: '', category: '', image: null, image_url: '' });
+    setFormData({ name: '', description: '', price: '', category: '' });
     setIsNewCategory(false);
     setNewCategory('');
     setError('');
@@ -176,71 +162,151 @@ const AdminMenu = () => {
   };
 
   const formatPrice = (price) => {
-    return `$${parseFloat(price).toFixed(2)}`;
+    return `£${parseFloat(price).toFixed(2)}`;
   };
 
+  // Filter items by search query
+  const filteredItems = menuItems.filter(item => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      item.name.toLowerCase().includes(query) ||
+      item.description?.toLowerCase().includes(query) ||
+      item.category.toLowerCase().includes(query)
+    );
+  });
+
+  // Group items by category
+  const itemsByCategory = {};
+  filteredItems.forEach(item => {
+    if (!itemsByCategory[item.category]) {
+      itemsByCategory[item.category] = [];
+    }
+    itemsByCategory[item.category].push(item);
+  });
+  const displayCategories = selectedCategory 
+    ? (itemsByCategory[selectedCategory] ? [selectedCategory] : [])
+    : Object.keys(itemsByCategory);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 py-12">
+    <div className="min-h-screen bg-white py-4 sm:py-6" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-8 animate-fade-in">
+        <div className="flex justify-between items-center mb-4">
           <div>
-            <h2 className="text-3xl font-bold" style={{ color: '#122d4b' }}>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
               Manage Menu
             </h2>
-            <p className="text-gray-600 mt-2">Add, edit, or delete menu items</p>
+            <p className="text-xs" style={{ color: '#555', fontFamily: "'Libre Baskerville', sans-serif" }}>Add, edit, or delete menu items</p>
           </div>
           <button
             onClick={() => setIsFormOpen(true)}
-            className="px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-            style={{ backgroundColor: '#122d4b' }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
+            className="px-4 py-2 text-white text-sm font-semibold rounded-lg transition-all duration-300"
+            style={{ backgroundColor: '#000000', fontFamily: "'Libre Baskerville', sans-serif" }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#000000'}
           >
             + Add Item
           </button>
         </div>
 
-        {/* Category Filter */}
-        <div className="mb-6 flex flex-wrap gap-2 overflow-x-auto pb-2 animate-slide-up">
-          <button
-            onClick={() => setSelectedCategory('')}
-            className={`px-4 py-2 rounded-full font-medium transition-all duration-300 transform hover:scale-105 whitespace-nowrap ${
-              selectedCategory === ''
-                ? 'text-white shadow-lg'
-                : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
-            }`}
-            style={selectedCategory === '' ? { backgroundColor: '#122d4b' } : {}}
-            onMouseEnter={(e) => selectedCategory === '' && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-            onMouseLeave={(e) => selectedCategory === '' && (e.currentTarget.style.backgroundColor = '#122d4b')}
-          >
-            All
-          </button>
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full font-medium transition-all duration-300 transform hover:scale-105 whitespace-nowrap ${
-                selectedCategory === category
-                  ? 'text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 shadow hover:shadow-md'
-              }`}
-              style={selectedCategory === category ? { backgroundColor: '#122d4b' } : {}}
-              onMouseEnter={(e) => selectedCategory === category && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-              onMouseLeave={(e) => selectedCategory === category && (e.currentTarget.style.backgroundColor = '#122d4b')}
+        {/* Search Bar */}
+        <div className="mb-6 flex gap-2">
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              placeholder="Search menu items..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 pl-10 border-2 rounded-lg focus:outline-none focus:ring-2 bg-white text-sm"
+              style={{ borderColor: '#d4af37', fontFamily: "'Libre Baskerville', sans-serif" }}
+            />
+            <svg
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              {category}
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="px-4 py-2 border-2 rounded-lg hover:bg-gray-100 transition-colors bg-white text-sm"
+              style={{ borderColor: '#d4af37', fontFamily: "'Libre Baskerville', sans-serif" }}
+            >
+              Clear
             </button>
-          ))}
+          )}
         </div>
 
+        {/* Mobile Category Dropdown */}
+        <div className="lg:hidden mb-4">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full px-4 py-2 border-2 rounded-lg focus:outline-none bg-white text-sm"
+            style={{ borderColor: '#d4af37', fontFamily: "'Libre Baskerville', sans-serif" }}
+          >
+            <option value="">All Items</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Categories Sidebar - Left (Desktop Only) */}
+          <div className="hidden lg:block lg:w-72 flex-shrink-0">
+            <div className="bg-white border-2 rounded-lg p-4" style={{ borderColor: '#d4af37' }}>
+              <h3 className="text-lg font-bold mb-4" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>Categories</h3>
+              <div className="space-y-2">
+                <button
+                  onClick={() => setSelectedCategory('')}
+                  className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    selectedCategory === ''
+                      ? 'text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                  style={selectedCategory === '' ? { backgroundColor: '#000000', fontFamily: "'Libre Baskerville', sans-serif" } : { fontFamily: "'Libre Baskerville', sans-serif" }}
+                  onMouseEnter={(e) => selectedCategory === '' && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+                  onMouseLeave={(e) => selectedCategory === '' && (e.currentTarget.style.backgroundColor = '#000000')}
+                >
+                  All Items
+                </button>
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`w-full text-left px-5 py-3 rounded-lg text-sm font-medium transition-all ${
+                      selectedCategory === category
+                        ? 'text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                    style={selectedCategory === category ? { backgroundColor: '#000000', fontFamily: "'Libre Baskerville', sans-serif" } : { fontFamily: "'Libre Baskerville', sans-serif" }}
+                    onMouseEnter={(e) => selectedCategory === category && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+                    onMouseLeave={(e) => selectedCategory === category && (e.currentTarget.style.backgroundColor = '#000000')}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content Area */}
+          <div className="flex-1 min-w-0">
+
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6 animate-slide-down">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded mb-4 text-xs" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
             {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-6 animate-slide-down">
+          <div className="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded mb-4 text-xs" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
             {success}
           </div>
         )}
@@ -250,7 +316,7 @@ const AdminMenu = () => {
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
             <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-slide-up">
               <div className="p-6">
-                <h3 className="text-2xl font-bold mb-6" style={{ color: '#122d4b' }}>
+                <h3 className="text-2xl font-bold mb-6" style={{ color: '#000000' }}>
                   {editingItem ? 'Edit Menu Item' : 'Add Menu Item'}
                 </h3>
 
@@ -335,39 +401,6 @@ const AdminMenu = () => {
                       )}
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
-                    {/* Current Image Preview */}
-                    {formData.image_url && !formData.image && (
-                      <div className="mb-3 p-3 bg-gray-50 rounded-lg border-2 border-gray-200">
-                        <p className="text-sm text-gray-600 mb-2">Current Image:</p>
-                        <img 
-                          src={formData.image_url} 
-                          alt="Current" 
-                          className="w-32 h-32 object-cover rounded-lg"
-                        />
-                      </div>
-                    )}
-                    {/* New Image Preview */}
-                    {formData.image && (
-                      <div className="mb-3 p-3 bg-blue-50 rounded-lg border-2 border-blue-200">
-                        <p className="text-sm text-blue-600 mb-2">New Image:</p>
-                        <img 
-                          src={URL.createObjectURL(formData.image)} 
-                          alt="Preview" 
-                          className="w-32 h-32 object-cover rounded-lg"
-                        />
-                      </div>
-                    )}
-                    <input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                    <p className="text-sm text-gray-500 mt-1">Leave empty to keep current image</p>
-                  </div>
                   
                   {/* Error and Success Messages near button */}
                   {error && (
@@ -393,9 +426,9 @@ const AdminMenu = () => {
                       type="submit"
                       disabled={saving}
                       className="flex-1 px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                      style={{ backgroundColor: '#122d4b' }}
-                      onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-                      onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#122d4b')}
+                      style={{ backgroundColor: '#000000' }}
+                      onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+                      onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#000000')}
                     >
                       {saving ? (
                         <span className="flex items-center justify-center">
@@ -426,65 +459,85 @@ const AdminMenu = () => {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-            <p className="mt-4 text-gray-600">Loading menu...</p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#d4af37' }}></div>
+            <p className="mt-4 text-gray-600" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>Loading menu...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {menuItems.map((item, index) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 group animate-fade-in flex flex-col"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-500">
-                  {item.image_url ? (
-                    <img
-                      src={item.image_url}
-                      alt={item.name}
-                      className="h-full w-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                    />
-                  ) : (
-                    <span className="text-6xl transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
-                      🍽️
-                    </span>
-                  )}
-                </div>
-                <div className="p-6 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">
-                      {item.name}
-                    </h3>
-                    <span className="text-xl font-bold" style={{ color: '#122d4b' }}>
-                      {formatPrice(item.price)}
-                    </span>
-                  </div>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">{item.description}</p>
-                  <span className="inline-block text-xs font-semibold px-3 py-1.5 rounded-full mb-4" style={{ backgroundColor: '#e8f0f8', color: '#122d4b' }}>
-                    {item.category}
-                  </span>
-                  <div className="flex gap-2 mt-auto">
-                    <button
-                      onClick={() => handleEdit(item)}
-                      className="flex-1 px-4 py-2 text-white rounded-lg transition-all duration-300 font-semibold"
-                      style={{ backgroundColor: '#122d4b' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="flex-1 px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-300 font-semibold"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
+          <div className="space-y-6">
+            {displayCategories.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-600" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>No items found.</p>
               </div>
-            ))}
+            ) : (
+              displayCategories.map((category) => {
+                const items = itemsByCategory[category] || [];
+                if (items.length === 0) return null;
+
+                return (
+                  <div key={category} className="bg-white rounded-lg overflow-hidden mb-4">
+                    {/* Category Header - Grey Background */}
+                    <div className="bg-gray-300 px-4 py-3">
+                      <h2 className="text-xl sm:text-2xl font-bold" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
+                        {category}
+                      </h2>
+                    </div>
+                    <div className="bg-white">
+                      {items.map((item, index) => (
+                        <div key={item.id} className={`px-4 py-3 ${index !== items.length - 1 ? 'border-b border-dotted' : ''}`} style={{ borderColor: '#d1d5db' }}>
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="text-base sm:text-lg font-bold" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
+                                  {item.name}
+                                </h3>
+                                <span className="text-base sm:text-lg font-bold whitespace-nowrap" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
+                                  {formatPrice(item.price)}
+                                </span>
+                              </div>
+                              {item.description && (
+                                <p className="text-sm" style={{ color: '#6b7280', fontFamily: "'Libre Baskerville', sans-serif" }}>
+                                  {item.description}
+                                </p>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                              <button
+                                onClick={() => handleEdit(item)}
+                                className="px-3 py-1.5 text-white text-xs font-semibold rounded transition-all"
+                                style={{ 
+                                  backgroundColor: '#000000',
+                                  fontFamily: "'Libre Baskerville', sans-serif"
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#000000'}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDelete(item.id)}
+                                className="px-3 py-1.5 text-white text-xs font-semibold rounded transition-all"
+                                style={{ 
+                                  backgroundColor: '#dc2626',
+                                  fontFamily: "'Libre Baskerville', sans-serif"
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#b91c1c'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#dc2626'}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         )}
+          </div>
+        </div>
       </div>
     </div>
   );

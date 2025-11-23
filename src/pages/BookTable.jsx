@@ -16,7 +16,31 @@ const BookTable = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [timeConstraints, setTimeConstraints] = useState({ min: '12:00', max: '23:59' });
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const navigate = useNavigate();
+
+  const generateTimeSlots = (selectedDate) => {
+    const hours = getOpeningHours(selectedDate);
+    const slots = [];
+    const [openHour, openMin] = hours.openTime.split(':').map(Number);
+    const [closeHour, closeMin] = hours.closeTime.split(':').map(Number);
+    
+    let currentHour = openHour;
+    let currentMin = openMin;
+    
+    while (currentHour < closeHour || (currentHour === closeHour && currentMin < closeMin)) {
+      const timeString = `${String(currentHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`;
+      slots.push(timeString);
+      
+      currentMin += 30;
+      if (currentMin >= 60) {
+        currentMin = 0;
+        currentHour += 1;
+      }
+    }
+    
+    setAvailableTimeSlots(slots);
+  };
 
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -24,6 +48,8 @@ const BookTable = () => {
     // Set initial time constraints
     const todayDate = new Date();
     setTimeConstraints(getTimeConstraints(todayDate));
+    // Generate initial time slots
+    generateTimeSlots(todayDate);
   }, []);
 
   useEffect(() => {
@@ -35,6 +61,8 @@ const BookTable = () => {
       if (formData.time && !isWithinOpeningHours(selectedDate, formData.time)) {
         setFormData(prev => ({ ...prev, time: '' }));
       }
+      // Generate available time slots
+      generateTimeSlots(selectedDate);
     }
   }, [formData.date]);
 
@@ -44,6 +72,29 @@ const BookTable = () => {
       ...formData,
       [name]: value
     });
+  };
+
+  const handleTimeSlotClick = (time) => {
+    setFormData({
+      ...formData,
+      time: time
+    });
+  };
+
+  const getDateDisplay = (dateString) => {
+    if (!dateString) return 'Select Date';
+    const date = new Date(dateString);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+      return 'Tomorrow';
+    } else {
+      return date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -98,72 +149,140 @@ const BookTable = () => {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-6 sm:p-8 border border-white/50 animate-fade-in">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold" style={{ color: '#122d4b' }}>
+            <h2 className="text-3xl font-bold" style={{ color: '#000000' }}>
               Book a Table
             </h2>
             <p className="text-gray-600 mt-2">Reserve your dining experience</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6 overflow-visible">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-1">
-              <div className="min-w-0">
-                <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
-                  Date *
+            {/* Party, Date, Time Dropdowns */}
+            <div className="grid grid-cols-3 gap-4">
+              {/* Party Dropdown */}
+              <div className="relative">
+                <label htmlFor="number_of_guests" className="block text-sm font-medium text-gray-700 mb-2" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+                  Party
                 </label>
-                <input
-                  id="date"
-                  name="date"
-                  type="date"
-                  required
-                  min={new Date().toISOString().split('T')[0]}
-                  value={formData.date}
-                  onChange={handleChange}
-                  className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
-                />
+                <div className="relative">
+                  <select
+                    id="number_of_guests"
+                    name="number_of_guests"
+                    required
+                    value={formData.number_of_guests}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border-2 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 pr-10"
+                    style={{ borderColor: '#9ca3af', fontFamily: "'Libre Baskerville', sans-serif" }}
+                  >
+                    <option value="">Select</option>
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(num => (
+                      <option key={num} value={num}>{num}</option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
               </div>
 
-              <div className="min-w-0">
-                <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-2">
-                  Time *
+              {/* Date Dropdown */}
+              <div className="relative">
+                <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+                  Date
                 </label>
-                <input
-                  id="time"
-                  name="time"
-                  type="time"
-                  required
-                  min={timeConstraints.min}
-                  max={timeConstraints.max}
-                  value={formData.time}
-                  onChange={handleChange}
-                  className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
-                />
+                <div className="relative">
+                  <input
+                    id="date"
+                    name="date"
+                    type="date"
+                    required
+                    min={new Date().toISOString().split('T')[0]}
+                    max={(() => {
+                      const maxDate = new Date();
+                      maxDate.setMonth(maxDate.getMonth() + 1);
+                      return maxDate.toISOString().split('T')[0];
+                    })()}
+                    value={formData.date}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border-2 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 pr-10"
+                    style={{ borderColor: '#9ca3af', fontFamily: "'Libre Baskerville', sans-serif" }}
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
                 {formData.date && (
-                  <p className="text-xs text-red-500 mt-1">
-                    Opening hours: {formatOpeningHours(new Date(formData.date))}
+                  <p className="text-xs text-gray-500 mt-1" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+                    {getDateDisplay(formData.date)}
                   </p>
                 )}
               </div>
+
+              {/* Time Dropdown */}
+              <div className="relative">
+                <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-2" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+                  Time
+                </label>
+                <div className="relative">
+                  <input
+                    id="time"
+                    name="time"
+                    type="time"
+                    required
+                    min={timeConstraints.min}
+                    max={timeConstraints.max}
+                    value={formData.time}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border-2 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 pr-10"
+                    style={{ borderColor: '#9ca3af', fontFamily: "'Libre Baskerville', sans-serif" }}
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
+
+            {/* Horizontal Line Separator */}
+            <div className="border-t border-gray-300 my-6"></div>
+
+            {/* Time Slots Grid */}
+            {formData.date && availableTimeSlots.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold mb-4" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
+                  Available Times
+                </h3>
+                <div className="grid grid-cols-3 gap-3">
+                  {availableTimeSlots.slice(0, 9).map((slot) => (
+                    <button
+                      key={slot}
+                      type="button"
+                      onClick={() => handleTimeSlotClick(slot)}
+                      className={`px-4 py-3 rounded-lg border-2 transition-all ${
+                        formData.time === slot
+                          ? 'bg-blue-100 border-blue-500 text-blue-700'
+                          : 'bg-white border-gray-300 text-blue-600 hover:bg-gray-50'
+                      }`}
+                      style={{ 
+                        fontFamily: "'Libre Baskerville', sans-serif",
+                        borderColor: formData.time === slot ? '#3b82f6' : '#d1d5db'
+                      }}
+                    >
+                      {slot}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-1">
               <div className="min-w-0">
-                <label htmlFor="number_of_guests" className="block text-sm font-medium text-gray-700 mb-2">
-                  Number of Guests *
-                </label>
-                <input
-                  id="number_of_guests"
-                  name="number_of_guests"
-                  type="number"
-                  min="1"
-                  required
-                  value={formData.number_of_guests}
-                  onChange={handleChange}
-                  className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
-                />
-              </div>
-
-              <div className="min-w-0">
-                <label htmlFor="mobile_number" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="mobile_number" className="block text-sm font-medium text-gray-700 mb-2" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
                   Mobile Number *
                 </label>
                 <input
@@ -174,28 +293,30 @@ const BookTable = () => {
                   value={formData.mobile_number}
                   onChange={handleChange}
                   placeholder="+1234567890"
-                  className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                  className="w-full max-w-full min-w-0 px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2"
+                  style={{ borderColor: '#9ca3af', fontFamily: "'Libre Baskerville', sans-serif" }}
+                />
+              </div>
+
+              <div className="min-w-0">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+                  Email (Optional)
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="your.email@example.com"
+                  className="w-full max-w-full min-w-0 px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2"
+                  style={{ borderColor: '#9ca3af', fontFamily: "'Libre Baskerville', sans-serif" }}
                 />
               </div>
             </div>
 
             <div className="min-w-0">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email (Optional)
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="your.email@example.com"
-                className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
-              />
-            </div>
-
-            <div className="min-w-0">
-              <label htmlFor="special_requests" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="special_requests" className="block text-sm font-medium text-gray-700 mb-2" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
                 Special Requests
               </label>
               <textarea
@@ -204,7 +325,8 @@ const BookTable = () => {
                 rows="4"
                 value={formData.special_requests}
                 onChange={handleChange}
-                className="w-full max-w-full min-w-0 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 resize-none"
+                className="w-full max-w-full min-w-0 px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 resize-none"
+                style={{ borderColor: '#9ca3af', fontFamily: "'Libre Baskerville', sans-serif" }}
                 placeholder="Any special requests or dietary requirements..."
               ></textarea>
             </div>
@@ -233,9 +355,9 @@ const BookTable = () => {
                 type="submit"
                 disabled={loading}
                 className="w-full py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
-                style={{ backgroundColor: '#122d4b' }}
-                onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-                onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#122d4b')}
+                style={{ backgroundColor: '#000000' }}
+                onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+                onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#000000')}
               >
                 {loading ? (
                   <span className="flex items-center justify-center">

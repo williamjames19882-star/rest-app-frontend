@@ -75,6 +75,56 @@ const AdminTransactions = () => {
     setPagination(prev => ({ ...prev, pageSize: newPageSize, page: 1 }));
   };
 
+  const handleStatusUpdate = async (transactionId, newStatus) => {
+    try {
+      await adminAPI.updateTransactionStatus(transactionId, newStatus);
+      // Refresh transactions
+      fetchTransactions();
+      // Update selected transaction if it's the one being updated
+      if (selectedTransaction && selectedTransaction.id === transactionId) {
+        setSelectedTransaction(prev => ({ ...prev, status: newStatus }));
+      }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to update transaction status');
+      setTimeout(() => setError(''), 4000);
+    }
+  };
+
+  const handleOrderStatusUpdate = async (transactionId, newOrderStatus) => {
+    try {
+      await adminAPI.updateOrderStatus(transactionId, newOrderStatus);
+      // Refresh transactions
+      fetchTransactions();
+      // Update selected transaction if it's the one being updated
+      if (selectedTransaction && selectedTransaction.id === transactionId) {
+        setSelectedTransaction(prev => ({ ...prev, order_status: newOrderStatus }));
+      }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to update order status');
+      setTimeout(() => setError(''), 4000);
+    }
+  };
+
+  const getOrderStatusDisplay = (orderStatus) => {
+    const statusMap = {
+      'order_accepted': 'Order Accepted',
+      'order_preparing': 'Order Preparing',
+      'order_ready': 'Order Ready',
+      'order_delivered': 'Order Delivered'
+    };
+    return statusMap[orderStatus] || orderStatus;
+  };
+
+  const getOrderStatusColor = (orderStatus) => {
+    const colorMap = {
+      'order_accepted': 'bg-blue-100 text-blue-800',
+      'order_preparing': 'bg-yellow-100 text-yellow-800',
+      'order_ready': 'bg-orange-100 text-orange-800',
+      'order_delivered': 'bg-green-100 text-green-800'
+    };
+    return colorMap[orderStatus] || 'bg-gray-100 text-gray-800';
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-US', {
@@ -87,9 +137,9 @@ const AdminTransactions = () => {
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-GB', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'GBP',
     }).format(amount);
   };
 
@@ -134,9 +184,9 @@ const AdminTransactions = () => {
             <button
               type="submit"
               className="px-4 py-2 text-white rounded transition-colors"
-              style={{ backgroundColor: '#122d4b' }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
+              style={{ backgroundColor: '#000000' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#000000'}
             >
               Search
             </button>
@@ -159,7 +209,7 @@ const AdminTransactions = () => {
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {loading ? (
           <div className="p-8 text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#122d4b' }}></div>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#000000' }}></div>
             <p className="mt-4 text-gray-600">Loading transactions...</p>
           </div>
         ) : transactions.length === 0 ? (
@@ -191,6 +241,9 @@ const AdminTransactions = () => {
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Order Status
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Date
@@ -227,15 +280,38 @@ const AdminTransactions = () => {
                       </span>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        transaction.status === 'completed' 
-                          ? 'bg-green-100 text-green-800' 
-                          : transaction.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {transaction.status}
-                      </span>
+                      <select
+                        value={transaction.status}
+                        onChange={(e) => handleStatusUpdate(transaction.id, e.target.value)}
+                        className={`px-2 py-1 text-xs font-semibold rounded border-0 cursor-pointer ${
+                          transaction.status === 'completed' 
+                            ? 'bg-green-100 text-green-800' 
+                            : transaction.status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : transaction.status === 'processing'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}
+                        style={{ fontFamily: "'Libre Baskerville', sans-serif" }}
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                      <select
+                        value={transaction.order_status || 'order_accepted'}
+                        onChange={(e) => handleOrderStatusUpdate(transaction.id, e.target.value)}
+                        className={`px-2 py-1 text-xs font-semibold rounded border-0 cursor-pointer ${getOrderStatusColor(transaction.order_status || 'order_accepted')}`}
+                        style={{ fontFamily: "'Libre Baskerville', sans-serif" }}
+                      >
+                        <option value="order_accepted">Order Accepted</option>
+                        <option value="order_preparing">Order Preparing</option>
+                        <option value="order_ready">Order Ready</option>
+                        <option value="order_delivered">Order Delivered</option>
+                      </select>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                       {formatDate(transaction.created_at)}
@@ -244,9 +320,9 @@ const AdminTransactions = () => {
                       <button
                         onClick={() => setSelectedTransaction(transaction)}
                         className="hover:underline"
-                        style={{ color: '#122d4b' }}
-                        onMouseEnter={(e) => e.currentTarget.style.color = '#1a3a5f'}
-                        onMouseLeave={(e) => e.currentTarget.style.color = '#122d4b'}
+                        style={{ color: '#000000' }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#1a1a1a'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#000000'}
                       >
                         View Details
                       </button>
@@ -307,18 +383,40 @@ const AdminTransactions = () => {
                     <p className="text-lg">{selectedTransaction.payment_method}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Status</label>
-                    <p className="text-lg">
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    <label className="text-sm font-medium text-gray-500 mb-2 block">Status</label>
+                    <select
+                      value={selectedTransaction.status}
+                      onChange={(e) => handleStatusUpdate(selectedTransaction.id, e.target.value)}
+                      className={`px-3 py-2 text-sm font-semibold rounded border-0 cursor-pointer ${
                         selectedTransaction.status === 'completed' 
                           ? 'bg-green-100 text-green-800' 
                           : selectedTransaction.status === 'pending'
                           ? 'bg-yellow-100 text-yellow-800'
+                          : selectedTransaction.status === 'processing'
+                          ? 'bg-blue-100 text-blue-800'
                           : 'bg-red-100 text-red-800'
-                      }`}>
-                        {selectedTransaction.status}
-                      </span>
-                    </p>
+                      }`}
+                      style={{ fontFamily: "'Libre Baskerville', sans-serif" }}
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="processing">Processing</option>
+                      <option value="completed">Completed</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-500 mb-2 block">Order Status</label>
+                    <select
+                      value={selectedTransaction.order_status || 'order_accepted'}
+                      onChange={(e) => handleOrderStatusUpdate(selectedTransaction.id, e.target.value)}
+                      className={`px-3 py-2 text-sm font-semibold rounded border-0 cursor-pointer ${getOrderStatusColor(selectedTransaction.order_status || 'order_accepted')}`}
+                      style={{ fontFamily: "'Libre Baskerville', sans-serif" }}
+                    >
+                      <option value="order_accepted">Order Accepted</option>
+                      <option value="order_preparing">Order Preparing</option>
+                      <option value="order_ready">Order Ready</option>
+                      <option value="order_delivered">Order Delivered</option>
+                    </select>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">Date</label>

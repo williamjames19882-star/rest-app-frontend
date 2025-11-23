@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useHolidayPromo } from '../context/HolidayPromoContext';
 import { useCart } from '../context/CartContext';
@@ -11,21 +11,37 @@ const Navbar = () => {
   const { showPopup } = useHolidayPromo();
   const { getCartItemsCount } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [menuDropdownOpen, setMenuDropdownOpen] = useState(false);
   const [mobileMenuDropdownOpen, setMobileMenuDropdownOpen] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const [menuCategories, setMenuCategories] = useState([]);
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen]);
+
   const fetchCategories = async () => {
     try {
       const response = await menuAPI.getCategories();
-      setCategories(response.data || []);
+      setMenuCategories(response.data || []);
     } catch (err) {
       console.error('Error fetching categories:', err);
+      // Fallback to empty array if API fails
+      setMenuCategories([]);
     }
   };
 
@@ -35,15 +51,15 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="shadow-md sticky top-0 z-50" style={{ backgroundColor: '#122d4b' }}>
+    <nav className="shadow-md sticky top-0 z-50" style={{ backgroundColor: '#000000' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-14">
           <div className="flex items-center">
             <Link to={ROUTE_PATHS.HOME} className="text-lg sm:text-xl font-bold hover:opacity-80 transition-opacity duration-300 flex items-center gap-2">
               <img
-                src="/images/title.jpeg"
+                src="/images/logo.png"
                 alt="Spice and Sizzle"
-                className="h-12 sm:h-16 object-contain block"
+                className="h-10 sm:h-12 md:h-14 object-contain block"
               />
               {/* <span className="text-gray-900">
                 Spice and Sizzle
@@ -85,21 +101,23 @@ const Navbar = () => {
                       </svg>
                     </Link>
                     {menuDropdownOpen && (
-                      <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                        {categories.length > 0 ? (
-                          categories.map((category) => (
-                            <Link
-                              key={category}
-                              to={`${ROUTE_PATHS.MENU}?category=${encodeURIComponent(category)}`}
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() => setMenuDropdownOpen(false)}
-                            >
-                              {category}
-                            </Link>
-                          ))
-                        ) : (
-                          <div className="px-4 py-2 text-sm text-gray-500">Loading...</div>
-                        )}
+                      <div 
+                        className="absolute top-full left-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2"
+                        style={{ 
+                          marginTop: '-4px',
+                          paddingTop: '12px'
+                        }}
+                      >
+                        {menuCategories.map((category) => (
+                          <Link
+                            key={category}
+                            to={`${ROUTE_PATHS.MENU}?category=${encodeURIComponent(category)}`}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setMenuDropdownOpen(false)}
+                          >
+                            {category}
+                          </Link>
+                        ))}
                       </div>
                     )}
                   </div>
@@ -161,7 +179,10 @@ const Navbar = () => {
                 </Link>
                 <button
                   onClick={showPopup}
-                  className="px-4 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white hover:bg-orange-600 transition-all duration-300 flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all duration-300 flex items-center gap-2"
+                  style={{ backgroundColor: '#000000', fontFamily: "'Libre Baskerville', sans-serif" }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#000000'}
                 >
                   <span>🎁</span>
                   <span>Special Offers</span>
@@ -195,7 +216,7 @@ const Navbar = () => {
                 </Link>
                 <Link 
                   to={ROUTE_PATHS.SIGNUP}
-                  className="px-5 py-2 rounded-lg text-sm font-medium text-white transition-all duration-300" style={{ backgroundColor: '#122d4b' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
+                  className="px-5 py-2 rounded-lg text-sm font-medium text-white transition-all duration-300" style={{ backgroundColor: '#000000' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#000000'}
                 >
                   Sign Up
                 </Link>
@@ -215,7 +236,7 @@ const Navbar = () => {
                 </svg>
               ) : (
                 <svg className="h-6 w-6 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
             </button>
@@ -225,36 +246,43 @@ const Navbar = () => {
 
           {/* Mobile menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden animate-slide-down">
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-700 max-h-[calc(100vh-5rem)] overflow-y-auto" style={{ backgroundColor: '#122d4b' }}>
-                {/* Admin navigation */}
-                {token && isAdmin && navigationItems.admin.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-gray-800 transition-all duration-300"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                
+            <>
+              {/* Backdrop overlay */}
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                onClick={() => setMobileMenuOpen(false)}
+              ></div>
+              {/* Mobile menu overlay */}
+              <div 
+                className="fixed top-14 left-0 right-0 bottom-0 md:hidden animate-slide-down z-50 overflow-y-auto" 
+                style={{ backgroundColor: '#000000' }}
+              >
+                <div className="px-4 py-8 space-y-4">
                 {/* Public navigation - only show for non-admin users */}
                 {!isAdmin && (
-                  <>
+                  <div className="flex flex-col items-center space-y-4" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
                     <Link
                       to={ROUTE_PATHS.HOME}
-                      className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-gray-800 transition-all duration-300"
+                      className="text-lg"
+                      style={{ 
+                        color: location.pathname === ROUTE_PATHS.HOME ? '#D4B037' : '#C0C0C0'
+                      }}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Home
                     </Link>
-                    <div>
+                    <div className="w-full max-w-xs">
                       <button
                         onClick={() => setMobileMenuDropdownOpen(!mobileMenuDropdownOpen)}
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-gray-800 transition-all duration-300"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border"
+                        style={{ 
+                          backgroundColor: '#1a1a1a',
+                          borderColor: '#d4af37',
+                          color: '#C0C0C0',
+                          fontFamily: "'Libre Baskerville', sans-serif"
+                        }}
                       >
-                        <span>Menu</span>
+                        <span className="text-lg">Menu</span>
                         <svg 
                           className={`h-4 w-4 transition-transform duration-300 ${mobileMenuDropdownOpen ? 'transform rotate-180' : ''}`}
                           fill="none" 
@@ -265,10 +293,14 @@ const Navbar = () => {
                         </svg>
                       </button>
                       {mobileMenuDropdownOpen && (
-                        <div className="pl-4 space-y-1 mt-1">
+                        <div className="mt-2 space-y-2">
                           <Link
                             to={ROUTE_PATHS.MENU}
-                            className="block px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-gray-800 transition-all duration-300"
+                            className="block px-4 py-2 text-center text-base"
+                            style={{ 
+                              color: '#C0C0C0',
+                              fontFamily: "'Libre Baskerville', sans-serif"
+                            }}
                             onClick={() => {
                               setMobileMenuOpen(false);
                               setMobileMenuDropdownOpen(false);
@@ -276,132 +308,160 @@ const Navbar = () => {
                           >
                             All Items
                           </Link>
-                          {categories.length > 0 ? (
-                            categories.map((category) => (
-                              <Link
-                                key={category}
-                                to={`${ROUTE_PATHS.MENU}?category=${encodeURIComponent(category)}`}
-                                className="block px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-gray-800 transition-all duration-300"
-                                onClick={() => {
-                                  setMobileMenuOpen(false);
-                                  setMobileMenuDropdownOpen(false);
-                                }}
-                              >
-                                {category}
-                              </Link>
-                            ))
-                          ) : (
-                            <div className="px-3 py-2 text-sm text-gray-500">Loading...</div>
-                          )}
+                          {menuCategories.map((category) => (
+                            <Link
+                              key={category}
+                              to={`${ROUTE_PATHS.MENU}?category=${encodeURIComponent(category)}`}
+                              className="block px-4 py-2 text-center text-base"
+                              style={{ 
+                                color: '#C0C0C0',
+                                fontFamily: "'Libre Baskerville', sans-serif"
+                              }}
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                setMobileMenuDropdownOpen(false);
+                              }}
+                            >
+                              {category}
+                            </Link>
+                          ))}
                         </div>
                       )}
                     </div>
                     <Link
                       to="/gallery"
-                      className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-gray-800 transition-all duration-300"
+                      className="text-lg"
+                      style={{ 
+                        color: location.pathname === '/gallery' ? '#D4B037' : '#C0C0C0'
+                      }}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Gallery
                     </Link>
                     <Link
                       to="/about"
-                      className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-gray-800 transition-all duration-300"
+                      className="text-lg"
+                      style={{ 
+                        color: location.pathname === '/about' ? '#D4B037' : '#C0C0C0'
+                      }}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       About Us
                     </Link>
                     <Link
                       to={ROUTE_PATHS.CONTACT}
-                      className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-gray-800 transition-all duration-300"
+                      className="text-lg"
+                      style={{ 
+                        color: location.pathname === ROUTE_PATHS.CONTACT ? '#D4B037' : '#C0C0C0'
+                      }}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Contact Us
                     </Link>
-                    <Link
-                      to={ROUTE_PATHS.CART}
-                      className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-gray-800 transition-all duration-300 flex items-center gap-2"
-                      onClick={() => setMobileMenuOpen(false)}
+                    {/* Special Offers */}
+                    <button
+                      onClick={() => {
+                        showPopup();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="text-lg flex items-center justify-center gap-2"
+                      style={{ 
+                        color: '#C0C0C0',
+                        fontFamily: "'Libre Baskerville', sans-serif"
+                      }}
                     >
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                      Cart
-                      {getCartItemsCount() > 0 && (
-                        <span className="bg-orange-500 text-white text-xs font-bold rounded-full px-2 py-0.5">
-                          {getCartItemsCount() > 9 ? '9+' : getCartItemsCount()}
-                        </span>
-                      )}
-                    </Link>
-                  </>
-                )}
-            
-            {/* Authenticated navigation */}
-            {token && navigationItems.authenticated.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-gray-800 transition-all duration-300"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-            
-            {/* Offers Button - Mobile - Only show for non-admin users */}
-            {!isAdmin && (
-              <button
-                onClick={() => {
-                  showPopup();
-                  setMobileMenuOpen(false);
-                }}
-                className="block w-full text-left px-3 py-2 rounded-lg text-base font-medium bg-orange-500 text-white hover:bg-orange-600 transition-all duration-300 mb-2"
-              >
-                🎁 Special Offers
-              </button>
-            )}
-
-            {/* Login/Logout Section - At the bottom */}
-            {token ? (
-              <>
-                {userName && (
-                  <div className="flex items-center gap-2 px-3 py-2 text-base font-medium text-white bg-gray-800 rounded-lg mb-2 mt-2">
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    {userName}
+                      <span>🎁</span>
+                      <span>Special Offers</span>
+                    </button>
                   </div>
                 )}
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="block w-full px-3 py-2 rounded-lg text-base font-medium bg-red-600 text-white hover:bg-red-700 transition-all duration-300"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <div className="flex gap-2 mt-2">
-                <Link 
-                  to={ROUTE_PATHS.LOGIN}
-                  className="flex-1 text-center px-3 py-2 rounded-lg text-base font-medium text-white hover:text-gray-300 hover:bg-gray-800 transition-all duration-300 border border-gray-700"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Login
-                </Link>
-                <Link 
-                  to={ROUTE_PATHS.SIGNUP}
-                  className="flex-1 text-center px-3 py-2 rounded-lg text-base font-medium text-white transition-all duration-300" style={{ backgroundColor: '#122d4b' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Sign Up
-                </Link>
+                
+                {/* Authenticated navigation - Show only when logged in and not admin */}
+                {token && !isAdmin && (
+                  <div className="flex flex-col items-center space-y-4" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+                    {navigationItems.authenticated.map((item) => (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        className="text-lg"
+                        style={{ 
+                          color: location.pathname === item.path ? '#D4B037' : '#C0C0C0'
+                        }}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                
+                {/* Login and Signup - Show only when not logged in */}
+                {!token && (
+                  <div className="flex flex-col items-center space-y-4" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+                    <Link
+                      to={ROUTE_PATHS.LOGIN}
+                      className="text-lg"
+                      style={{ 
+                        color: location.pathname === ROUTE_PATHS.LOGIN ? '#D4B037' : '#C0C0C0'
+                      }}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to={ROUTE_PATHS.SIGNUP}
+                      className="text-lg"
+                      style={{ 
+                        color: location.pathname === ROUTE_PATHS.SIGNUP ? '#D4B037' : '#C0C0C0'
+                      }}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                )}
+                
+                {/* Admin navigation */}
+                {token && isAdmin && (
+                  <div className="flex flex-col items-center space-y-4" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+                    {navigationItems.admin.map((item) => (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        className="text-lg"
+                        style={{ 
+                          color: location.pathname === item.path ? '#D4B037' : '#C0C0C0'
+                        }}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                
+                {/* Logout - Show only when logged in */}
+                {token && (
+                  <div className="flex flex-col items-center space-y-4" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="text-lg"
+                      style={{ 
+                        color: '#C0C0C0',
+                        fontFamily: "'Libre Baskerville', sans-serif"
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-      )}
+            </>
+          )}
     </nav>
   );
 };

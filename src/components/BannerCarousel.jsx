@@ -40,44 +40,98 @@ const BannerCarousel = () => {
   const prev = () => setIndex((prev) => (prev - 1 + banners.length) % banners.length);
 
   return (
-    <div className="relative w-full overflow-hidden">
-      <div className="relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px]">
+    <div className="relative w-full overflow-hidden fixed top-0 left-0 right-0 z-0" style={{ height: '100vh', zIndex: 0 }}>
+      <div className="relative w-full h-full">
         {/* Loading State or Placeholder with Title Image */}
         {(loading || !banners.length) && (
           <div className="absolute inset-0 bg-cover bg-center">
-            <div className="absolute inset-0 bg-black/30"></div>
             <div className="absolute inset-0 flex items-center justify-center">
               {loading ? (
                 <div className="text-center">
                   <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
                   <p className="text-white text-lg font-semibold">Loading...</p>
                 </div>
-              ) : (
-                <div className="text-center text-white">
-                  <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold drop-shadow-lg mb-4">Spice and Sizzle</h2>
-                  <p className="text-lg sm:text-xl md:text-2xl opacity-95 drop-shadow-lg">Authentic cuisine and exceptional dining experience</p>
-                </div>
-              )}
+              ) : null}
             </div>
-            {/* Fixed Action Buttons at Bottom */}
-            <div className="absolute bottom-8 left-0 right-0 z-20">
+            {/* Fixed Action Buttons at Center */}
+            <div className="absolute top-1/2 left-0 right-0 z-20 transform -translate-y-1/2">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                <div className="flex flex-col justify-center items-center">
                   <Link
                     to={ROUTE_PATHS.MENU}
-                    className="px-5 sm:px-8 py-3 sm:py-4 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 text-sm sm:text-base lg:text-lg transform hover:scale-110 shadow-2xl border-2 border-white"
+                    className="text-center whitespace-nowrap"
+                    style={{
+                      fontSize: '1.1rem',
+                      fontWeight: 500,
+                      padding: '20px 0px',
+                      backgroundColor: 'rgba(8, 8, 8, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.7)',
+                      margin: '5px',
+                      width: '200px',
+                      color: 'rgb(212, 176, 55)',
+                      transition: 'background-color 0.3s, border-color 0.3s',
+                      fontFamily: "'Libre Baskerville', sans-serif"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.9)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.7)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.7)';
+                    }}
                   >
                     ORDER ONLINE
                   </Link>
                   <Link
                     to={ROUTE_PATHS.BOOK_TABLE}
-                    className="px-5 sm:px-8 py-3 sm:py-4 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition-all duration-300 text-sm sm:text-base lg:text-lg transform hover:scale-110 shadow-2xl border-2 border-orange-400"
+                    className="text-center whitespace-nowrap"
+                    style={{
+                      fontSize: '1.1rem',
+                      fontWeight: 500,
+                      padding: '20px 0px',
+                      backgroundColor: 'rgba(8, 8, 8, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.7)',
+                      margin: '5px',
+                      width: '200px',
+                      color: 'rgb(212, 176, 55)',
+                      transition: 'background-color 0.3s, border-color 0.3s',
+                      fontFamily: "'Libre Baskerville', sans-serif"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.9)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.7)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.7)';
+                    }}
                   >
                     RESERVATION
                   </Link>
                   <Link
                     to={ROUTE_PATHS.CONTACT}
-                    className="px-5 sm:px-8 py-3 sm:py-4 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 text-sm sm:text-base lg:text-lg transform hover:scale-110 shadow-2xl border-2 border-white"
+                    className="text-center whitespace-nowrap"
+                    style={{
+                      fontSize: '1.1rem',
+                      fontWeight: 500,
+                      padding: '20px 0px',
+                      backgroundColor: 'rgba(8, 8, 8, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.7)',
+                      margin: '5px',
+                      width: '200px',
+                      color: 'rgb(212, 176, 55)',
+                      transition: 'background-color 0.3s, border-color 0.3s',
+                      fontFamily: "'Libre Baskerville', sans-serif"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.9)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.7)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.7)';
+                    }}
                   >
                     CATERING
                   </Link>
@@ -90,52 +144,99 @@ const BannerCarousel = () => {
         {/* Banners */}
         {!loading && banners.length > 0 && (
           <>
-            <div
-              className="flex h-full transition-transform duration-700 ease-in-out"
-              style={{ transform: `translateX(-${index * 100}%)` }}
-            >
-              {banners.map((b, i) => (
-                <div key={b.id || i} className="min-w-full h-full relative">
-                  <img
-                    src={b.image_url}
-                    alt={b.title || 'Banner'}
-                    className="w-full h-full object-cover brightness-75"
-                    loading={i === 0 ? 'eager' : 'lazy'}
-                  />
-                  {/* Dark overlay to make banners slightly dull */}
-                  <div className="absolute inset-0 bg-black/30"></div>
-                  {/* Title and Subtitle at Top */}
-                  {(b.title || b.subtitle) && (
-                    <div className="absolute top-8 left-0 right-0 z-10">
-                      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white text-center">
-                        {b.title && <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold drop-shadow-lg mb-4">{b.title}</h2>}
-                        {b.subtitle && <p className="text-lg sm:text-xl md:text-2xl opacity-95 drop-shadow-lg">{b.subtitle}</p>}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+            {banners.map((b, i) => (
+              <div
+                key={b.id || i}
+                className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-700 ease-in-out"
+                style={{
+                  backgroundImage: `url(${b.image_url})`,
+                  backgroundAttachment: 'fixed',
+                  backgroundPosition: 'center center',
+                  opacity: i === index ? 1 : 0,
+                  zIndex: i === index ? 1 : 0
+                }}
+              ></div>
+            ))}
             
-            {/* Fixed Action Buttons at Bottom - Don't move with banners */}
-            <div className="absolute bottom-8 left-0 right-0 z-20">
+            {/* Fixed Action Buttons at Center - Don't move with banners */}
+            <div className="absolute top-1/2 left-0 right-0 z-20 transform -translate-y-1/2">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                <div className="flex flex-col justify-center items-center">
                   <Link
                     to={ROUTE_PATHS.MENU}
-                    className="px-5 sm:px-8 py-3 sm:py-4 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 text-sm sm:text-base lg:text-lg transform hover:scale-110 shadow-2xl border-2 border-white"
+                    className="text-center whitespace-nowrap"
+                    style={{
+                      fontSize: '1.1rem',
+                      fontWeight: 500,
+                      padding: '20px 0px',
+                      backgroundColor: 'rgba(8, 8, 8, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.7)',
+                      margin: '5px',
+                      width: '200px',
+                      color: 'rgb(212, 176, 55)',
+                      transition: 'background-color 0.3s, border-color 0.3s',
+                      fontFamily: "'Libre Baskerville', sans-serif"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.9)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.7)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.7)';
+                    }}
                   >
                     ORDER ONLINE
                   </Link>
                   <Link
                     to={ROUTE_PATHS.BOOK_TABLE}
-                    className="px-5 sm:px-8 py-3 sm:py-4 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition-all duration-300 text-sm sm:text-base lg:text-lg transform hover:scale-110 shadow-2xl border-2 border-orange-400"
+                    className="text-center whitespace-nowrap"
+                    style={{
+                      fontSize: '1.1rem',
+                      fontWeight: 500,
+                      padding: '20px 0px',
+                      backgroundColor: 'rgba(8, 8, 8, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.7)',
+                      margin: '5px',
+                      width: '200px',
+                      color: 'rgb(212, 176, 55)',
+                      transition: 'background-color 0.3s, border-color 0.3s',
+                      fontFamily: "'Libre Baskerville', sans-serif"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.9)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.7)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.7)';
+                    }}
                   >
                     RESERVATION
                   </Link>
                   <Link
                     to={ROUTE_PATHS.CONTACT}
-                    className="px-5 sm:px-8 py-3 sm:py-4 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 text-sm sm:text-base lg:text-lg transform hover:scale-110 shadow-2xl border-2 border-white"
+                    className="text-center whitespace-nowrap"
+                    style={{
+                      fontSize: '1.1rem',
+                      fontWeight: 500,
+                      padding: '20px 0px',
+                      backgroundColor: 'rgba(8, 8, 8, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.7)',
+                      margin: '5px',
+                      width: '200px',
+                      color: 'rgb(212, 176, 55)',
+                      transition: 'background-color 0.3s, border-color 0.3s',
+                      fontFamily: "'Libre Baskerville', sans-serif"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.9)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(8, 8, 8, 0.7)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.7)';
+                    }}
                   >
                     CATERING
                   </Link>

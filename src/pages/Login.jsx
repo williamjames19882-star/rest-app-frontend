@@ -41,36 +41,29 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-white/50 animate-fade-in">
+    <div className="min-h-screen bg-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
+      <div className="max-w-md w-full space-y-8 bg-white p-8 sm:p-10 rounded-lg shadow-lg border-4" style={{ borderColor: '#ddb73c' }}>
         <div>
-          <div className="flex justify-center mb-6">
-            <img
-              src="/images/title.jpeg"
-              alt="Spice and Sizzle"
-              className="h-20 sm:h-24 object-contain shadow-md"
-            />
-          </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-center text-3xl font-bold mb-2" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm" style={{ color: '#555', fontFamily: "'Libre Baskerville', sans-serif" }}>
             Or{' '}
-            <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors duration-300">
+            <Link to="/signup" className="font-medium transition-colors duration-300" style={{ color: '#ddb73c' }} onMouseEnter={(e) => e.currentTarget.style.color = '#d4af37'} onMouseLeave={(e) => e.currentTarget.style.color = '#ddb73c'}>
               create a new account
             </Link>
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+            <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded relative" style={{ fontFamily: "'Libre Baskerville', sans-serif" }}>
               {error}
             </div>
           )}
           
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div className="rounded-md shadow-sm space-y-4">
             <div>
-              <label htmlFor="email" className="sr-only">
+              <label htmlFor="email" className="block text-sm font-medium mb-2" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
                 Email address
               </label>
               <input
@@ -79,14 +72,27 @@ const Login = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-t-lg relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-all duration-300"
+                className="appearance-none rounded-lg relative block w-full px-3 py-3 border-2 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-300"
+                style={{ 
+                  borderColor: '#ddd',
+                  fontFamily: "'Libre Baskerville', sans-serif",
+                  '--tw-ring-color': '#ddb73c'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#ddb73c';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(221, 183, 60, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#ddd';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
                 placeholder="Email address"
                 value={formData.email}
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="password" className="block text-sm font-medium mb-2" style={{ color: '#2C3E50', fontFamily: "'Libre Baskerville', sans-serif" }}>
                 Password
               </label>
               <input
@@ -95,7 +101,19 @@ const Login = () => {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none rounded-b-lg relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-all duration-300"
+                className="appearance-none rounded-lg relative block w-full px-3 py-3 border-2 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-300"
+                style={{ 
+                  borderColor: '#ddd',
+                  fontFamily: "'Libre Baskerville', sans-serif"
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#ddb73c';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(221, 183, 60, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#ddd';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
@@ -107,10 +125,13 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
-              style={{ backgroundColor: '#122d4b' }}
-              onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a3a5f')}
-              onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#122d4b')}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white focus:outline-none disabled:opacity-50 transition-all duration-300"
+              style={{ 
+                backgroundColor: '#000000',
+                fontFamily: "'Libre Baskerville', sans-serif"
+              }}
+              onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#1a1a1a')}
+              onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = '#000000')}
             >
               {loading ? (
                 <span className="flex items-center">

@@ -77,7 +77,7 @@ const AdminUsers = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 animate-fade-in">
-          <h2 className="text-3xl font-bold" style={{ color: '#122d4b' }}>
+          <h2 className="text-3xl font-bold" style={{ color: '#000000' }}>
             All Users
           </h2>
           <p className="text-gray-600 mt-2">View and manage user accounts</p>
@@ -103,9 +103,9 @@ const AdminUsers = () => {
             <button
               type="submit"
               className="px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300"
-              style={{ backgroundColor: '#122d4b' }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3a5f'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#122d4b'}
+              style={{ backgroundColor: '#000000' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#000000'}
             >
               Search
             </button>
@@ -133,7 +133,7 @@ const AdminUsers = () => {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#122d4b' }}></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#000000' }}></div>
             <p className="mt-4 text-gray-600">Loading users...</p>
           </div>
         ) : users.length === 0 ? (
@@ -146,7 +146,7 @@ const AdminUsers = () => {
             <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl overflow-hidden animate-fade-in">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead style={{ backgroundColor: '#122d4b' }}>
+                  <thead style={{ backgroundColor: '#000000' }}>
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                         User
@@ -175,7 +175,7 @@ const AdminUsers = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-10 w-10">
-                              <div className="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold" style={{ backgroundColor: '#122d4b' }}>
+                              <div className="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold" style={{ backgroundColor: '#000000' }}>
                                 {user.name.charAt(0).toUpperCase()}
                               </div>
                             </div>
@@ -199,7 +199,7 @@ const AdminUsers = () => {
                                 ? 'bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800'
                                 : ''
                             }`}
-                            style={user.role === 'admin' ? {} : { backgroundColor: '#e8f0f8', color: '#122d4b' }}
+                            style={user.role === 'admin' ? {} : { backgroundColor: '#e8f0f8', color: '#000000' }}
                           >
                             {user.role}
                           </span>
